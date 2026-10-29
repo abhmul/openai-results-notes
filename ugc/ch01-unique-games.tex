@@ -1,0 +1,123 @@
+\chapter{Unique games and the conjecture}\label{ch:ug}
+
+The Unique Games Conjecture concerns how well the value of a unique game can be approximated in polynomial time.
+
+\begin{definition}[Unique game]\label{def:ug}
+A \emph{unique game} $G$ consists of a finite directed graph $(V,E)$ whose edges join distinct vertices (parallel edges allowed), a probability distribution $p$ on $E$ (the \emph{weights}; uniform unless stated), a finite alphabet $K$, and a permutation $\pi_e$ of $K$ for each edge $e=(v,w)$. A \emph{labeling} $\lambda:V\to K$ assigns each vertex $v$ a \emph{label} $\lambda(v)$, and
+\[
+\val_\lambda(G)=\Prob_{e=(v,w)\sim p}\bigl[\pi_e(\lambda(v))=\lambda(w)\bigr],\qquad \val(G)=\max_\lambda\val_\lambda(G).
+\]
+Here $\val_\lambda(G)$ is the probability that $\lambda$ satisfies a random edge, and $\val(G)$ is its maximum over labelings.
+In a \emph{translation game}, $K=\F_2^N$ and $\pi_e(y)=y+b_e$ with $b_e\in K$ (Figure~\ref{fig:ugexample}).
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,
+  v/.style={circle,draw,minimum size=6.5mm,inner sep=0pt},
+  lab/.style={draw,rounded corners=1pt,inner sep=1.5pt,font=\footnotesize},
+  off/.style={font=\footnotesize}]
+\node[v] (u1) at (0,1.8) {$v_1$};
+\node[v] (v1) at (4,1.8) {$v_2$};
+\node[v] (u2) at (4,0) {$v_3$};
+\node[v] (v2) at (0,0) {$v_4$};
+\node[lab,left=2mm of u1] {$00$};
+\node[lab,right=2mm of v1] {$01$};
+\node[lab,right=2mm of u2] {$10$};
+\node[lab,left=2mm of v2] {$10$};
+\draw (u1) -- node[off,above] {$+01$} (v1);
+\draw (v1) -- node[off,right] {$+11$} (u2);
+\draw[dashed,thick] (u2) -- node[off,below] {$+01$} (v2);
+\draw (v2) -- node[off,left] {$+10$} (u1);
+\end{tikzpicture}
+\caption{A translation game over $\F_2^2$ on a 4-cycle. Edge labels are the offsets $b_e$, and boxes show a labeling. Three edges are satisfied and the dashed one is not ($10+01\ne10$). The offsets sum to $01\ne00$ around the cycle, so a labeling satisfying all four edges would give $\lambda(v_1)=\lambda(v_1)+01$. Hence every labeling fails at least one of the four equally weighted edges, so $\val(G)\le3/4$, and the labeling shown attains $3/4$.}\label{fig:ugexample}
+\end{figure}
+
+For example, Max-Cut is the translation game over $\F_2$ with every $b_e=1$: a labeling is a cut, and an edge is satisfied when it crosses the cut.
+
+\phantomsection\label{nt:gap}Hardness of approximating $\val(G)$ is stated through a decision problem. For $0<s<c\le1$, $\GapUG_K(c,s)$ is the problem of deciding, for a unique game over $K$ with $\val(G)\ge c$ or $\val(G)\le s$, which holds. Here $c$ is the \emph{completeness} and $s$ the \emph{soundness}. A polynomial-time algorithm that estimates $\val(G)$ with additive error less than $(c-s)/2$ would decide $\GapUG_K(c,s)$. So NP-hardness of $\GapUG_K(c,s)$ rules out such an algorithm unless $\mathrm{P}=\mathrm{NP}$. Khot conjectured that the gap can be almost as large as possible.
+
+\begin{conjecture}[{Unique Games Conjecture, Khot 2002 \cite{Khot02}; see \cite[Conjecture~2.5]{Khot10}}]\label{conj:ugc}
+For all $\varepsilon,\delta\in(0,1/2)$ there is a finite $K$ such that $\GapUG_K(1-\varepsilon,\delta)$ is NP-hard.
+\end{conjecture}
+
+Two facts show that the gap cannot be larger: the conjecture needs $\varepsilon>0$, and $K$ must grow as $\delta$ shrinks. First, whether $\val(G)=1$ is decidable in polynomial time: discard edges of probability zero, and in each connected component try every label at one vertex, propagate it along a spanning tree, and check every edge. So $\GapUG_K(1,s)$ is not NP-hard unless $\mathrm{P}=\mathrm{NP}$. Second, if $\lambda$ is a uniformly random labeling, then $\Prob_\lambda[\pi_e(\lambda(v))=\lambda(w)]=1/|K|$ for each edge $e$, so $\E_\lambda\val_\lambda(G)=1/|K|$ and some labeling has $\val_\lambda(G)\ge1/|K|$. So soundness $\delta$ requires $|K|\ge1/\delta$.
+
+OpenAI proved the conjecture in the following form.
+
+\begin{theorem}[{\cite[Theorem~1.1]{OAI}}]\label{thm:ugt}
+For all $\varepsilon,\delta\in(0,1/2)$ there are $N\ge1$ and a polynomial-time reduction from 3SAT to unweighted (uniform $p$) translation games over $\F_2^N$ on simple bipartite graphs, with $\val\ge1-\varepsilon$ on satisfiable formulas and $\val\le\delta$ on unsatisfiable ones.
+\end{theorem}
+
+Chapter~\ref{ch:games} assembles its proof. Combined with earlier reductions that assume the conjecture, Theorem~\ref{thm:ugt} makes it NP-hard to approximate Max-Cut within any fixed ratio in $(\alpha_{\mathrm{GW}},1)$, where $\alpha_{\mathrm{GW}}\approx0.878$ is the Goemans--Williamson constant, and Vertex Cover within any fixed factor in $(1,2)$ \cite[Section~8.1]{OAI}.
+
+Before OpenAI's proof, the strongest result of this form had completeness $1/2$ \cite[Theorem~2.20]{Khot19}. It comes from games with a weaker kind of constraint. A \emph{2-to-2 constraint} on $K\times K$ is a relation $\mathcal R=\bigcup_{j=1}^{|K|/2}B_j\times B'_j$, where $B_1,\dots,B_{|K|/2}$ and $B'_1,\dots,B'_{|K|/2}$ are two partitions of $K$ into sets of size $2$. If $y\in B_j$, then $(y,y')\in\mathcal R$ exactly for the two elements $y'$ of $B'_j$. Likewise, each $y'\in B'_j$ is related exactly to the two elements of $B_j$. Hence the name (Figure~\ref{fig:twotwodef}). A \emph{2-to-2 game} is defined like a unique game (Definition~\ref{def:ug}) with 2-to-2 constraints in place of permutations.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,
+  lb/.style={inner sep=2pt,minimum width=1.3cm}]
+\node[lb] (l1) at (0,3) {$y_0$};
+\node[lb] (l2) at (0,2.2) {$y_1$};
+\node[lb] (l3) at (0,1) {$\tilde y_0$};
+\node[lb] (l4) at (0,0.2) {$\tilde y_1$};
+\node[lb] (r1) at (4,3) {$y'_0$};
+\node[lb] (r2) at (4,2.2) {$y'_1$};
+\node[lb] (r3) at (4,1) {$\tilde y'_0$};
+\node[lb] (r4) at (4,0.2) {$\tilde y'_1$};
+\node[draw,rounded corners=3pt,fit=(l1)(l2),inner sep=1pt,label=left:{$B_j$}] {};
+\node[draw,rounded corners=3pt,fit=(l3)(l4),inner sep=1pt,label=left:{$B_{\tilde j}$}] {};
+\node[draw,rounded corners=3pt,fit=(r1)(r2),inner sep=1pt,label=right:{$B'_j$}] {};
+\node[draw,rounded corners=3pt,fit=(r3)(r4),inner sep=1pt,label=right:{$B'_{\tilde j}$}] {};
+\node[above=0.45cm] at (l1) {$y\in K$};
+\node[above=0.45cm] at (r1) {$y'\in K$};
+\foreach \i in {1,2,3,4} { \draw[thick] (l\i.east) -- (r\i.west); }
+\draw[dashed] (l1.east) -- (r2.west);
+\draw[dashed] (l2.east) -- (r1.west);
+\draw[dashed] (l3.east) -- (r4.west);
+\draw[dashed] (l4.east) -- (r3.west);
+\node at (0,-0.55) {$\vdots$};
+\node at (4,-0.55) {$\vdots$};
+\draw[thick] (6.2,2.2) -- (7.0,2.2) node[right] {$\sigma_0(y_i)=y'_i$};
+\draw[dashed] (6.2,1.2) -- (7.0,1.2) node[right] {$\sigma_1(y_i)=y'_{i+1}$};
+\end{tikzpicture}
+\caption{A 2-to-2 constraint $\mathcal R$: all four pairs between $B_j$ and $B'_j$ are related. Two of the $|K|/2$ pairs of blocks are shown. The solid and dashed edges are the graphs of the two permutations $\sigma_0$ and $\sigma_1$ of Lemma~\ref{lem:split}, with indices in $\F_2$.}\label{fig:twotwodef}
+\end{figure}
+
+\begin{theorem}[{2-to-2 Games Theorem: Khot--Minzer--Safra 2018 \cite{KMS23}; see \cite[Theorem~2.19]{Khot19}}]\label{thm:2to2}
+For every $\varepsilon\in(0,1/2)$ there is a finite alphabet for which distinguishing 2-to-2 games with $\val\ge1-\varepsilon$ from those with $\val\le\varepsilon$ is NP-hard.
+\end{theorem}
+
+A 2-to-2 constraint is the union of the graphs of two permutations, and imposing one of them at random halves every value.
+
+\begin{lemma}\label{lem:split}
+A 2-to-2 constraint $\mathcal R=\bigcup_jB_j\times B'_j$ is $\mathrm{graph}(\sigma_0)\sqcup\mathrm{graph}(\sigma_1)$ for two permutations $\sigma_0,\sigma_1$ of $K$. So if $G$ is a 2-to-2 game and $G'$ samples $e\sim p$ as $G$ does and then imposes $\sigma_0$ or $\sigma_1$ with probability $1/2$ each, then $\val_\lambda(G')=\val_\lambda(G)/2$ for every labeling $\lambda$.
+\end{lemma}
+
+\begin{proof}
+Write each pair of blocks as $B_j=\{y_0,y_1\}$ and $B'_j=\{y'_0,y'_1\}$, with indices in $\F_2$, and define $\sigma_c(y_i)=y'_{i+c}$ for $c\in\F_2$. Since $\{B_j\}$ and $\{B'_j\}$ partition $K$, $\sigma_0$ and $\sigma_1$ are permutations of $K$. For $y\in B_j$, the two elements of $B'_j$ are $\sigma_0(y)\ne\sigma_1(y)$. So if $(y,y')\in\mathcal R$, then $y'$ equals exactly one of them, and if $(y,y')\notin\mathcal R$, it equals neither. Hence, given $e$, a labeling that satisfies $e$ satisfies the chosen permutation with probability exactly $1/2$, and a labeling that fails $e$ satisfies neither permutation. So $\val_\lambda(G')=\val_\lambda(G)/2$.
+\end{proof}
+
+So splitting the constraints of the games in Theorem~\ref{thm:2to2} gives unique games with completeness $(1-\varepsilon)/2$.
+
+\begin{corollary}[{\cite[Section~2.8]{Khot19}}]\label{cor:half}
+For all $\varepsilon\in(0,1)$ and $\delta\in(0,(1-\varepsilon)/2)$ there is a finite $K$ such that $\GapUG_K\bigl((1-\varepsilon)/2,\delta\bigr)$ is NP-hard.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:2to2} with $\varepsilon_0=\min\{\varepsilon,2\delta,1/4\}$ in place of $\varepsilon$, and split every constraint as in Lemma~\ref{lem:split}. Splitting halves every value. So instances with $\val\ge1-\varepsilon_0$ become unique games with $\val\ge(1-\varepsilon_0)/2\ge(1-\varepsilon)/2$, and instances with $\val\le\varepsilon_0$ become unique games with $\val\le\varepsilon_0/2\le\delta$.
+\end{proof}
+
+How are the two theorems related? Corollary~\ref{cor:half} stops at completeness $(1-\varepsilon)/2$ because splitting halves every value (Lemma~\ref{lem:split}). Part~I proves Theorem~\ref{thm:2to2} with the construction that OpenAI uses for Theorem~\ref{thm:ugt}, but with 2-to-2 constraints where OpenAI's construction has permutations. Part~II replaces them by permutations. This changes one step of the soundness proof, and the new step yields soundness only $0.99$, which Chapter~\ref{ch:games} shows is enough.
+
+\chapternotes
+Unique games had been studied in the context of parallel repetition before Khot posed the problem of approximating their value \cite[Section~2.4]{Khot10}. Khot's survey \cite{Khot10} is the source of the definitions used here and describes the consequences of the conjecture known in 2010. The proof of Theorem~\ref{thm:2to2} is spread over four papers of Khot, Minzer, and Safra and of Dinur, Khot, Kindler, Minzer, and Safra \cite{KMS17,DKKMS,DKKMS21,KMS23}. Khot's exposition \cite{Khot19} lists them in its abstract and gives an overview of the whole proof.
+
+\chapterquestions
+\begin{question}\label{q:oddcycle}
+Let $G$ be Max-Cut on a cycle $v_1,\dots,v_L$ of odd length $L$: the translation game over $\F_2$ with edges $(v_i,v_{i+1})$ for $i=1,\dots,L$, where $v_{L+1}=v_1$, every $b_e=1$, and uniform weights. Compute $\val(G)$.
+\end{question}
+
+\begin{question}\label{q:propagation}
+Where does the algorithm that decides whether $\val(G)=1$ (after Conjecture~\ref{conj:ugc}) use that each $\pi_e$ is a permutation? What does the same procedure do on a 2-to-2 game?
+\end{question}

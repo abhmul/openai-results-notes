@@ -1,0 +1,223 @@
+\chapter{Soundness of the 2-to-2 game}\label{ch:twotwo}
+
+Why does a labeling $\lambda$ with $\val_\lambda(G_{2:2})\ge\varepsilon$ force $\OPT(\Theta)>4/5$ when $k$ is large? The answer completes the proof of Theorem~\ref{thm:2to2}. Theorem~\ref{thm:inverse} gives each restored function only a slice on which it agrees with some encoding, and different functions give unrelated slices. The proof turns these local agreements into strategies for a game played on the edges of the smooth game, and then shows that, when $\OPT(\Theta)\le4/5$, every pair of strategies succeeds with probability tending to $0$ as $k$ grows (Figure~\ref{fig:architecture}). Suppose $\OPT(\Theta)\le4/5$ and a labeling $\lambda$ has $\val_\lambda(G_{2:2})\ge\varepsilon$ before deleting loops.
+\begin{enumerate}
+\item By folding, the restored functions pass the equality test with probability at least $\varepsilon/2$ on average over $U$.
+\item Theorem~\ref{thm:inverse}, applied with $\eta=\varepsilon/32$, gives each $U$ in a set of probability at least $12\eta$ a slice on which $F_U$ agrees with some map $M\mapsto Mz+u$ on an $\alpha$ fraction.
+\item Both endpoints of a random edge of the smooth game receive the same row equations of a hidden table, called \emph{advice}, so that the slices their strategies choose are cut out by the same row equations. With probability bounded below independently of $k$, these row equations cut out a set of tables containing a slice on which $F_U$ agrees with some $M\mapsto Mz+u$ on an $\alpha/2$ fraction (Lemma~\ref{lem:goodadvice}).
+\item From their advice, the two endpoints decode labels that satisfy the projection with probability $\gamma>0$, independent of $k$.
+\item When $\OPT(\Theta)\le4/5$, every pair of strategies satisfies the projection with probability tending to $0$ as $k$ grows, because on the entries where both advice values vanish, the strategies give strategies for a repetition of $G_\Theta$ (Lemma~\ref{lem:clean}).
+\end{enumerate}
+For large $k$, Steps 4 and 5 contradict each other.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,
+  box/.style={draw,rounded corners=2pt,align=center,text width=4.1cm,inner sep=4pt},
+  arr/.style={-{Stealth[length=2mm]}},
+  lab/.style={font=\footnotesize,align=left,anchor=west}]
+\node[box] (a) at (0,0) {a labeling of $G_{2:2}$ has value $\ge\varepsilon$};
+\node[box] (b) at (0,-2.5) {on average over $U$, the restored functions pass the equality test with probability $\ge\varepsilon/2$};
+\node[box] (c) at (0,-5.3) {for $U$ of probability $\ge12\eta$: agreement with some $Mz+u$ on an $\alpha$ fraction of a slice};
+\node[box] (d) at (0,-8.3) {advice strategies succeed with probability $\ge\gamma$, independent of $k$};
+\node[box] (e) at (8.2,-5.3) {NO case: $\OPT(\Theta)\le4/5$};
+\node[box] (f) at (8.2,-8.3) {any advice strategies succeed with probability $\le\exp(-2^{-r_{\mathrm s}}k^{1/3}/3600)$};
+\node[box] (g) at (4.1,-10.6) {contradiction for large $k$, so $\val(G_{2:2})\le\varepsilon$};
+\draw[arr,thick,newc] (a) -- (b);
+\node[lab,text width=3.7cm] at (2.25,-1.25) {Step 1: folding (Lemma~\ref{lem:foldcompare})\\\textcolor{newc}{Part II: Fourier comparison}};
+\draw[arr] (b) -- (c);
+\node[lab,text width=3.6cm] at (2.25,-3.9) {Step 2: inverse theorem (Theorem~\ref{thm:inverse})};
+\draw[arr] (c) -- (d);
+\node[lab,text width=3.6cm] at (2.25,-6.8) {Steps 3--4: advice, good triples, transferred slices, decoding (Lemmas~\ref{lem:goodadvice}--\ref{lem:fourier})};
+\draw[arr] (e) -- (f);
+\node[lab,text width=2.6cm] at (10.45,-6.8) {Step 5: clean entries, repetition (Lemma~\ref{lem:clean})};
+\draw[arr] (d.south) -- (g.north west);
+\draw[arr] (f.south) -- (g.north east);
+\end{tikzpicture}
+\caption{The soundness proof of Theorem~\ref{thm:2to2}. Only Step~1 (blue arrow) uses the 2-to-2 test, and Part~II replaces that step.}\label{fig:architecture}
+\end{figure}
+
+\emph{Step 1: from the 2-to-2 test to the equality test.} Theorem~\ref{thm:inverse} concerns the equality test. For folded functions, replacing $l$ by $l+e_0$ turns the case $F(M+al^\top)=F(M)+a$ of the 2-to-2 test into the equality test.
+
+\begin{lemma}\label{lem:foldcompare}
+Let $F:\Mat_{\ell,m}\to K$ satisfy $F(M^{+h})=F(M)+h$ for all $M$ and all $h\in K$. For independent uniform $M\in\Mat_{\ell,m}$, $a\in K$, and $l\in\F_2^m$,
+\[
+\Prob\bigl[F(M+al^\top)=F(M)\bigr]\ \ge\ \tfrac12\,\Prob\bigl[F(M+al^\top)-F(M)\in\{0,a\}\bigr].
+\]
+\end{lemma}
+
+\begin{proof}
+The 2-to-2 test accepts when $E_0=\{F(M+al^\top)=F(M)\}$ or $E_1=\{F(M+al^\top)=F(M)+a\}$ occurs. We show that $\Prob[E_1]=\Prob[E_0]$. Adding $a$ to the column of $M+al^\top$ at the homogeneous coordinate gives $(M+al^\top)^{+a}=M+a(l+e_0)^\top$. By the hypothesis on $F$, $F\bigl(M+a(l+e_0)^\top\bigr)=F(M+al^\top)+a$. Since $a+a=0$, the event $E_1$ is therefore the event $F\bigl(M+a(l+e_0)^\top\bigr)=F(M)$, which is $E_0$ with $l+e_0$ in place of $l$. The vector $l+e_0$ is uniform on $\F_2^m$ and independent of $(M,a)$, so $\Prob[E_1]=\Prob[E_0]$. Since $E_0\cap E_1=\{a=0\}$, this gives the exact identity $\Prob[E_0]=\bigl(\Prob[E_0\cup E_1]+2^{-\ell}\bigr)/2$, and in particular $\Prob[E_0\cup E_1]\le2\Prob[E_0]$.
+\end{proof}
+
+Applying Lemma~\ref{lem:foldcompare} to each $F_U$ and averaging over $U$ gives
+\[
+\E_U\,\Prob_{M,a,l}\bigl[F_U(M+al^\top)=F_U(M)\bigr]\ \ge\ \varepsilon/2.
+\]
+Put $\eta=\varepsilon/32$. The inner probability is at most $1$, so it is at least $4\eta$ on a set of vertices $U$ of probability at least $16\eta-4\eta=12\eta$.
+
+\emph{Step 2: slices.} Theorem~\ref{thm:inverse}, applied with this $\eta$, gives $\alpha>0$ and $r_{\mathrm s}\ge1$. For $\ell$ and then $m$ large, it gives each such $U$ a slice, defined by at most $r_{\mathrm s}$ row and $r_{\mathrm s}$ column equations, on which $F_U$ agrees with some $Mz+u$ with probability at least $\alpha$. The slice depends on $F_U$. The target vector $z$ need not be a label, and slices chosen separately on the two endpoints of an edge $(U,O)$ need not yield labels with $\bar\pi z_U=z_O$.
+
+\emph{Step 3: advice.} So both endpoints of the random edge $(U,O)$ are given the values of the same $r_{\mathrm s}$ combinations of rows of a hidden table. The resulting advice experiment is a game in the verifier-and-prover language introduced after Definition~\ref{def:projection} (Figure~\ref{fig:advice}).
+
+\begin{definition}[Advice experiment; after {\cite[Definition~5.2]{OAI}}]\label{def:advice}
+Sample the random edge $(U,O)$ of the smooth game with replacement probability $\beta$, and independent uniform linear maps $A:K\to\F_2^{r_{\mathrm s}}$ and $M_O:L_O\to K$, and put $S_O=AM_O$. The verifier gives $(O,A,S_O)$ to the $O$-prover and $(U,A,S_O\bar\pi)$ to the $U$-prover. Each prover returns a label $z_Q\in L_Q$ of its vertex $Q$, and they succeed if $\bar\pi z_U=z_O$. A strategy chooses its label from its own vertex, its advice, and its own randomness.
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,
+  box/.style={draw,rounded corners=2pt,align=center,inner sep=4pt},
+  arr/.style={-{Stealth[length=2mm]}},
+  lab/.style={font=\footnotesize,align=center}]
+\node[box] (ver) at (0,1.7) {verifier samples $(U,O)$, $A:K\to\F_2^{r_{\mathrm s}}$, and $M_O:L_O\to K$};
+\node[box] (pu) at (-3.4,0) {$U$-prover};
+\node[box] (po) at (3.4,0) {$O$-prover};
+\draw[arr] (-3.4,1.35) -- node[lab,left] {$U,\ A,\ S_O\bar\pi$} (pu.north);
+\draw[arr] (3.4,1.35) -- node[lab,right] {$O,\ A,\ S_O=AM_O$} (po.north);
+\node[box] (chk) at (0,-1.1) {success if $\bar\pi z_U=z_O$};
+\draw[arr] (pu.south) |- node[lab,pos=0.25,left] {label $z_U\in L_U$} (chk.west);
+\draw[arr] (po.south) |- node[lab,pos=0.25,right] {label $z_O\in L_O$} (chk.east);
+\end{tikzpicture}
+\caption{The advice experiment. Neither prover receives $M_O$, and both advice values fix the same combinations of rows.}\label{fig:advice}
+\end{figure}
+
+The $O$-advice fixes the \emph{row fiber} $\{M':AM'=S_O\}$ of tables on $O$. Its pullback $S_O\bar\pi=A(M_O\bar\pi)$ fixes the row fiber $\{M:AM=S_O\bar\pi\}$ of tables on $U$. Every slice of the kind in Theorem~\ref{thm:inverse} lies in a row fiber: its row equations $M^\top d_i=s_i$ read $AM=S$, where $A$ has the rows $d_i^\top$ and $S$ the rows $s_i^\top$, padded with zero rows to $r_{\mathrm s}$ rows.
+
+\phantomsection\label{nt:good}Call a triple $(U,A,S)$, with $S\in\Hom(L_U,\F_2^{r_{\mathrm s}})$, \emph{good} if some column equations $Mq_j=t_j$, with $q_j\in L_U$, $t_j\in K$, and $j=1,\dots,n_{\mathrm c}\le r_{\mathrm s}$, and a target $Mz+u$ satisfy two conditions: the slice $\mathcal S=\{M:AM=S,\ Mq_j=t_j\text{ for all }j\}$ is nonempty, and $\Prob_{M\mid\mathcal S}[F_U(M)=Mz+u]\ge\alpha/2$. These data form a \emph{certificate}. For each good triple, fix one certificate by a rule that depends only on the triple and on $\lambda$.
+
+Good triples cannot be rare. If the good row fibers covered less than an $\eta$ fraction of the tables, erasing $F_U$ on them would leave a function that passes the equality test with probability above $2\eta$ but agrees with every target on less than a $3\alpha/4$ fraction of every slice, contradicting Theorem~\ref{thm:inverse}.
+
+\begin{lemma}[Good advice is not rare; after {\cite[Lemma~5.5]{OAI}}; compare {\cite[Lemma~3.7]{DKKMS}} for zoom-ins]\label{lem:goodadvice}
+Suppose $\val_\lambda(G_{2:2})\ge\varepsilon$ and $2^{-(\ell-r_{\mathrm s})}<\alpha/8$, with $\ell$ as in Step~2. Let $U$, $A$, and $M\in\Mat_{\ell,m}$ be independent, with $U$ drawn as in Definition~\ref{def:G22} and $A$ and $M$ uniform. For all $k$ large enough in terms of $\varepsilon$ and $\ell$,
+\[
+\Prob\bigl[(U,A,AM)\text{ is good}\bigr]\ \ge\ 12\eta^2\,2^{-\ell r_{\mathrm s}}.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $r=r_{\mathrm s}$, and fix $U$ with $\Prob_{M,a,l}[F_U(M+al^\top)=F_U(M)]\ge4\eta$. Let $\mathcal B$ be the union of the row fibers $\{M:AM=S\}$ of the good triples $(U,A,S)$. Suppose that $\Prob_M[\mathcal B]<\eta$, and let $f'$ be $F_U$ with each value on $\mathcal B$ replaced by an independent uniform element of $K$. The outcome of the equality test changes only if $M$ or $M+al^\top$ lies in $\mathcal B$, and both are uniform. So $f'$ passes the test with probability above $4\eta-2\eta=2\eta$.
+
+Some choice of the new values agrees with each target on less than an $\alpha/4$ fraction of each slice. A slice of the kind in Theorem~\ref{thm:inverse} and a target $Mz+u$ are described by $r$ row equations $d_i^\top M=s_i^\top$, $r$ column equations $Mq_j=t_j$ (trivial equations $0=0$ allowed), and $(z,u)$, so there are at most $2^{(2r+1)(\ell+m)}$ descriptions. A nonempty slice $\mathcal S$ is a coset of the matrices $N$ with $d_i^\top N=0$ and $Nq_j=0$ for all $i,j$. These form a space isomorphic to $\Hom\bigl(\F_2^m/\Span\{q_j\},\{y\in K:d_i^\top y=0\text{ for all }i\}\bigr)$, so $|\mathcal S|\ge2^{(\ell-r)(m-r)}$. The number of $M\in\mathcal S\cap\mathcal B$ whose new value equals $Mz+u$ is a sum of independent indicators with mean at most $2^{-\ell}|\mathcal S|<\alpha|\mathcal S|/8$. By Hoeffding's inequality \cite[Theorem~2.2.6]{Ver26}, it is at least $\alpha|\mathcal S|/4$ with probability at most $\exp(-\alpha^2|\mathcal S|/32)$. For $m$ large in terms of $\ell$, $r$, and $\alpha$, a union bound over descriptions gives new values for which this number is below $\alpha|\mathcal S|/4$ for every description.
+
+Now let $\mathcal S=\{M:AM=S,\ Mq_j=t_j\text{ for all }j\}$ be a slice of the kind in Theorem~\ref{thm:inverse}, with a target. If $(U,A,S)$ is good, every value of $f'$ on $\mathcal S$ is new. Otherwise the old values agree with the target on less than an $\alpha/2$ fraction of $\mathcal S$. Either way, $f'$ agrees with the target on less than a $3\alpha/4$ fraction of $\mathcal S$. Since $f'$ passes the equality test with probability above $2\eta$, this contradicts Theorem~\ref{thm:inverse}. Hence $\Prob_M[\mathcal B]\ge\eta$.
+
+Each $M\in\mathcal B$ lies in the row fiber of a good triple $(U,A_M,A_MM)$, and the uniform $A$ equals $A_M$ with probability $2^{-\ell r}$. So $\Prob_{A,M}[(U,A,AM)\text{ is good}]\ge\eta\,2^{-\ell r}$ for each fixed $U$. By Step~1 these $U$ have probability at least $12\eta$. Hence $\Prob[(U,A,AM)\text{ is good}]\ge12\eta\cdot\eta\,2^{-\ell r}=12\eta^2\,2^{-\ell r}$.
+\end{proof}
+
+\emph{Step 4: decoding.} A good triple gives the $U$-prover a short set of labels (Lemma~\ref{lem:labelset}). The $O$-prover must find the restriction of one of them without seeing the certificate. Sharing turns the certificate into agreement of $F_O$ on a slice (Lemmas~\ref{lem:tv} and~\ref{lem:transfer}), and Fourier sampling on the $O$-prover's row fiber detects that agreement (Lemma~\ref{lem:fourier}).
+
+\begin{lemma}[After {\cite[Lemma~5.5]{OAI}}]\label{lem:labelset}
+Let $(U,A,S)$ be good, with certificate $Mq_j=t_j$ for $j=1,\dots,n_{\mathrm c}$ and target $Mz+u$, and suppose $2^{-(\ell-r_{\mathrm s})}<\alpha/2$. Put $Z=\Span\{q_j\}$. Then $\mathcal A=(z+Z)\cap\{z_0=1\}$ is a nonempty set of at most $2^{r_{\mathrm s}}$ labels of $U$.
+\end{lemma}
+
+\begin{proof}
+The size bound holds because $\dim Z\le r_{\mathrm s}$. Suppose that $\mathcal A$ is empty, so that $z$ and every $q_j$ have homogeneous coordinate $0$. For $h\in\ker A$, the map $M\mapsto M^{+h}=M+he_0^\top$ then preserves the slice $\mathcal S$ of the certificate and the target, since $Ah=0$, $e_0^\top q_j=0$, and $e_0^\top z=0$. By folding, it adds $h$ to $F_U$. So at most one table in each orbit $\{M^{+h}:h\in\ker A\}$ agrees with the target. These orbits partition $\mathcal S$ into sets of size $|\ker A|\ge2^{\ell-r_{\mathrm s}}$, so the agreement on $\mathcal S$ is at most $2^{-(\ell-r_{\mathrm s})}<\alpha/2$, contradicting goodness.
+\end{proof}
+
+\emph{The $U$-prover's strategy.} If its advice $(U,A,S_O\bar\pi)$ is good, the $U$-prover returns a uniform element of the set $\mathcal A$ of the fixed certificate. Otherwise it returns any label of $U$.
+
+Goodness concerns a uniform table $M$ on $U$. In the advice experiment, the $U$-advice comes instead from the pullback $M_O\bar\pi$ of a uniform table on $O$. The two laws of tables are close.
+
+\begin{lemma}[After {\cite[Lemma~5.6]{OAI}}]\label{lem:tv}
+Fix $U$ and $\beta=k^{-2/3}$, draw $O$ given $U$ as in Definition~\ref{def:smooth}, and let $M_O\in\Hom(L_O,K)$ be uniform. The law of $M_O\bar\pi$ is within total variation distance $v_k=\tfrac12\bigl(\exp\bigl((2^\ell-1)k^{-1/3}/3\bigr)-1\bigr)^{1/2}$ of the uniform law on $\Hom(L_U,K)$, and $v_k\to0$ as $k\to\infty$.
+\end{lemma}
+
+\begin{proof}
+Given $U$, the entries are replaced independently, and the columns of $M_O$ are independent and uniform. If $O$ keeps $\theta_i$, the two columns of $M_O\bar\pi$ at the coordinates $\phi_1,\phi_2$ of $\theta_i$ are those of $M_O$, so they are uniform in $K^2$. If $O$ replaces $\theta_i$ by its variable at position $1$, $2$, or $3$, then $\bar\pi$ gives that variable the value $\phi_1$, $\phi_2$, or $bz_0+\phi_1+\phi_2$, where $b$ is the right side of $\theta_i$ (``Labels as vectors'', Chapter~\ref{ch:outer}). So, with $y$ the column of $M_O$ at that variable, the two columns are $(y,0)$, $(0,y)$, or $(y,y)$, and position $3$ adds $by$ to the homogeneous column. That column stays uniform and independent of the others, because the homogeneous column of $M_O$ is. It therefore suffices to compare, at each entry, the uniform law $\mathcal L_0$ on $K^2$ with $\mathcal L_\beta=(1-\beta)\mathcal L_0+\beta\mathcal L_1$, where $\mathcal L_1$ is the law of $(y,0)$, $(0,y)$, or $(y,y)$ with probability $1/3$ each and $y$ uniform.
+
+For laws $\mathcal L,\mathcal L'$, let $\chi^2(\mathcal L\Vert\mathcal L')=\E_{\mathcal L'}[(d\mathcal L/d\mathcal L'-1)^2]$. The ratio $d\mathcal L_1/d\mathcal L_0$ is $2^\ell$ at $(0,0)$, $2^\ell/3$ at the other $3(2^\ell-1)$ points of the three lines, and $0$ elsewhere. So $\chi^2(\mathcal L_1\Vert\mathcal L_0)=(2^\ell-1)/3$, and $\chi^2(\mathcal L_\beta\Vert\mathcal L_0)=\beta^2(2^\ell-1)/3$ because $d\mathcal L_\beta/d\mathcal L_0-1=\beta(d\mathcal L_1/d\mathcal L_0-1)$. For product laws, $1+\chi^2$ is the product of the factors $1+\chi^2$, because $\E[(d\mathcal L/d\mathcal L')^2]$ factors over independent coordinates. So the whole table has $\chi^2=\bigl(1+\beta^2(2^\ell-1)/3\bigr)^k-1\le\exp\bigl(k\beta^2(2^\ell-1)/3\bigr)-1$, with $k\beta^2=k^{-1/3}$. By the Cauchy--Schwarz inequality, the total variation distance $\tfrac12\E_{\mathcal L'}|d\mathcal L/d\mathcal L'-1|$ is at most $\tfrac12\chi^2(\mathcal L\Vert\mathcal L')^{1/2}$.
+\end{proof}
+
+\phantomsection\label{nt:transfer}Write $D=(U,O,A,S_O)$ for the data that determine both provers' inputs. Given $D$, the table $M_O$ is uniform on its row fiber. For a certificate on $U$, put $z'=\bar\pi z$ and define the \emph{transferred slice} $\mathcal S'=\{M':AM'=S_O,\ M'\bar\pi q_j=t_j\text{ for all }j\}$. Since $(M_O\bar\pi)z=M_Oz'$ and $F_U(M_O\bar\pi)=F_O(M_O)$, the event $F_U(M_O\bar\pi)=(M_O\bar\pi)z+u$ is the event $F_O(M_O)=M_Oz'+u$. So agreement of $F_U$ at pullbacks is agreement of $F_O$.
+
+\begin{lemma}[After {\cite[Lemma~5.7]{OAI}}]\label{lem:transfer}
+Under the hypotheses of Lemma~\ref{lem:goodadvice}, put $\gamma_1=\tfrac32\alpha\eta^2\,2^{-2\ell r_{\mathrm s}}$ and $\beta=k^{-2/3}$. For all $k$ large enough in terms of $\varepsilon$ and $\ell$, with probability at least $\gamma_1$ over $D$, the triple $(U,A,S_O\bar\pi)$ is good, its transferred slice $\mathcal S'$ is nonempty, and $\Prob_{M'\mid\mathcal S'}[F_O(M')=M'z'+u]\ge\alpha/4$.
+\end{lemma}
+
+\begin{proof}
+Let $U$, $A$, and $M$ be as in Lemma~\ref{lem:goodadvice}, and put $S=AM$. Let $\mathcal J$ be the event that $(U,A,S)$ is good and $M$ satisfies the column equations of its certificate, and $\mathcal J'$ the event that, moreover, $F_U(M)=Mz+u$. Given $(U,A,S)$, the table $M$ is uniform on the row fiber. In it, the slice of the certificate is nonempty and cut out by at most $\ell r_{\mathrm s}$ scalar equations, so it has probability at least $2^{-\ell r_{\mathrm s}}$. On the slice, the target agrees with probability at least $\alpha/2$. With Lemma~\ref{lem:goodadvice} this gives
+\[
+\Prob[\mathcal J']-\tfrac\alpha4\Prob[\mathcal J]\ \ge\ \tfrac\alpha4\Prob[\mathcal J]\ \ge\ \tfrac\alpha4\cdot12\eta^2\,2^{-2\ell r_{\mathrm s}}=2\gamma_1.
+\]
+Both events depend only on $(U,A,M)$. In the advice experiment, $U$ has the same law, $A$ is independent, and $M_O\bar\pi$ replaces $M$. By Lemma~\ref{lem:tv}, the left side changes by at most $(1+\alpha/4)v_k$, which is at most $\gamma_1$ for $k$ large.
+
+Now condition on $D$. The $U$-advice $S_O\bar\pi$, its goodness, and its certificate are functions of $D$. On good $D$, let $p_D=\Prob[M_O\in\mathcal S'\mid D]$, and when $p_D>0$ let $g_D$ be the agreement $\Prob_{M'\mid\mathcal S'}[F_O(M')=M'z'+u]$. Put $p_D=g_D=0$ on the other $D$, and $g_D=0$ whenever $p_D=0$. By sharing, the events $\mathcal J$ and $\mathcal J'$ at $M_O\bar\pi$ have conditional probabilities $p_D$ and $p_Dg_D$, so $\E_D[p_D(g_D-\alpha/4)]\ge\gamma_1$. The integrand is at most $1$, and it is positive only when $D$ has the three properties. So they hold with probability at least $\gamma_1$.
+\end{proof}
+
+Why should Fourier sampling find the label? If $F_O(M')=M'z'+u$ on the transferred slice, then for $\omega\in K^*$ the function $(-1)^{\omega(F_O(M'))}$ agrees there with $(-1)^{\omega(M'z'+u)}$, a character of $M'$ whose frequency encodes $z'$. Heuristically, sampling a frequency with probability equal to its squared Fourier coefficient then returns a frequency that determines $z'$ up to $\bar\pi\Span\{q_j\}$. Lemma~\ref{lem:fourier} makes this exact, with probability at least $2^{-\ell r_{\mathrm s}}(\alpha/8)^2$.
+
+\emph{The $O$-prover's strategy.} The $O$-prover receives $(O,A,S_O)$. It fixes $M_0$ with $AM_0=S_O$ and writes its row fiber as $M_0+\mathcal N$, where $\mathcal N=\Hom(L_O,\ker A)$. The characters of $\mathcal N$ are $N\mapsto(-1)^{\operatorname{tr}(YN)}$ for $Y\in\Hom(\ker A,L_O)$. The prover picks a uniform $\omega\in K^*$. If $\omega$ vanishes on $\ker A$, it returns any label of $O$. Otherwise it fixes $h\in\ker A$ with $\omega(h)=1$, samples $Y$ with probability $\widehat{f_\omega}(Y)^2$, and returns $Yh\in L_O$, where
+\[
+f_\omega(N)=(-1)^{\omega(F_O(M_0+N))},\qquad\widehat{f_\omega}(Y)=\E_{N\in\mathcal N}\,f_\omega(N)(-1)^{\operatorname{tr}(YN)}.
+\]
+These probabilities sum to $1$ by Parseval's identity. The returned vector is a label, by folding. Since $M_0+N+he_0^\top=(M_0+N)^{+h}$ and $\omega(h)=1$, $f_\omega(N+he_0^\top)=-f_\omega(N)$. Substituting $N+he_0^\top$ for $N$ in $\widehat{f_\omega}(Y)$ gives $\widehat{f_\omega}(Y)=-(-1)^{\operatorname{tr}(Yhe_0^\top)}\widehat{f_\omega}(Y)$. So a sampled $Y$ has $\operatorname{tr}(Yhe_0^\top)=1$, that is, $(Yh)_0=1$.
+
+\begin{lemma}[After {\cite[Lemma~5.8]{OAI}}]\label{lem:fourier}
+Suppose $2^{-(\ell-r_{\mathrm s})}<\alpha/8$, and fix $D$ with the three properties in Lemma~\ref{lem:transfer}. Given $D$, the two strategies satisfy $\bar\pi z_U=z_O$ with probability at least $2^{-\ell r_{\mathrm s}}(\alpha/8)^2\,2^{-r_{\mathrm s}}$.
+\end{lemma}
+
+\begin{proof}
+Put $Z'=\bar\pi Z$ and $\mathcal N_0=\{N\in\mathcal N:N|_{Z'}=0\}$. Agreement on $\mathcal S'$ will force Fourier mass onto maps $Y$ that send the chosen $h$ into $z'+Z'$. Since $\mathcal S'$ is nonempty, $\mathcal S'=M_0+N_*+\mathcal N_0$ for some $N_*\in\mathcal N$. For $y,y'\in K$, $\ind\{y=y'\}=\E_\omega(-1)^{\omega(y)+\omega(y')}$, with $\omega$ uniform in $K^*$. Applied to $y=F_O(M_0+N)$ and $y'=(M_0+N)z'+u$, the agreement on $\mathcal S'$ gives
+\[
+\tfrac\alpha4\le\E_\omega\Bigl[(-1)^{\omega(M_0z'+u)}C_\omega\Bigr],\qquad C_\omega=\E_{N\in N_*+\mathcal N_0}\,f_\omega(N)(-1)^{\omega(Nz')}.
+\]
+So $\E_\omega|C_\omega|\ge\alpha/4$. The $\omega$ that vanish on $\ker A$ form a fraction $2^{-\dim\ker A}\le2^{-(\ell-r_{\mathrm s})}<\alpha/8$ of $K^*$, and $|C_\omega|\le1$, so $\E_\omega\bigl[\ind\{\omega|_{\ker A}\ne0\}|C_\omega|\bigr]\ge\alpha/8$.
+
+Let $\Xi_\omega\in\Hom(\ker A,L_O)$ be the map $h\mapsto\omega(h)z'$, so that $\operatorname{tr}(\Xi_\omega N)=\omega(Nz')$. Expanding $f_\omega$ in characters gives $C_\omega=\sum_Y\widehat{f_\omega}(Y)\,\E_{N\in N_*+\mathcal N_0}(-1)^{\operatorname{tr}((Y+\Xi_\omega)N)}$. The character of $Y'=Y+\Xi_\omega$ averages to $0$ over $N_*+\mathcal N_0$ unless $\operatorname{tr}(Y'N)=0$ for all $N\in\mathcal N_0$, and this holds exactly when $Y'(\ker A)\subseteq Z'$. Indeed, if $Y'(\ker A)\subseteq Z'$, then $\operatorname{tr}(Y'N)=\operatorname{tr}(NY')=0$. Otherwise some $h'\in\ker A$ and some functional $\varpi$ on $L_O$ that vanishes on $Z'$ have $\varpi(Y'h')=1$, and $N=h'\varpi\in\mathcal N_0$ has $\operatorname{tr}(Y'N)=1$. So, with $\mathcal Y_\omega=\Xi_\omega+\Hom(\ker A,Z')$,
+\[
+C_\omega=\sum_{Y\in\mathcal Y_\omega}\widehat{f_\omega}(Y)(-1)^{\operatorname{tr}((Y+\Xi_\omega)N_*)}.
+\]
+The set $\mathcal Y_\omega$ has $2^{\dim\ker A\cdot\dim Z'}\le2^{\ell r_{\mathrm s}}$ elements, so by the Cauchy--Schwarz inequality $C_\omega^2\le2^{\ell r_{\mathrm s}}\sum_{Y\in\mathcal Y_\omega}\widehat{f_\omega}(Y)^2$. Hence the $O$-prover's $\omega$ does not vanish on $\ker A$ and its $Y$ lies in $\mathcal Y_\omega$ with probability at least
+\[
+2^{-\ell r_{\mathrm s}}\,\E_\omega\bigl[\ind\{\omega|_{\ker A}\ne0\}\,C_\omega^2\bigr]\ \ge\ 2^{-\ell r_{\mathrm s}}\Bigl(\E_\omega\bigl[\ind\{\omega|_{\ker A}\ne0\}\,|C_\omega|\bigr]\Bigr)^2\ \ge\ 2^{-\ell r_{\mathrm s}}(\alpha/8)^2.
+\]
+For such $Y$, $Yh=\omega(h)z'+w'=z'+w'$ with $w'\in Z'$, and $(Yh)_0=1$. So $z_O=Yh$ lies in $(z'+Z')\cap\{z_0=1\}$, which equals $\bar\pi\mathcal A$ because $(\bar\pi z)_0=z_0$ (``Labels as vectors'', Chapter~\ref{ch:outer}). Independently, the $U$-prover's uniform element of $\mathcal A$ is a preimage of $z_O$ with probability at least $1/|\mathcal A|\ge2^{-r_{\mathrm s}}$. Multiplying the two bounds gives the claim.
+\end{proof}
+
+\begin{proposition}[After {\cite[Proposition~5.3]{OAI}}]\label{prop:decoding}
+Suppose $\val_\lambda(G_{2:2})\ge\varepsilon$, with $\ell$ as in Step~2 and $2^{-(\ell-r_{\mathrm s})}<\alpha/8$. Put $\gamma=\gamma_1\,2^{-\ell r_{\mathrm s}}(\alpha/8)^2\,2^{-r_{\mathrm s}}$. For all $k$ large enough in terms of $\varepsilon$ and $\ell$, the strategies above succeed in the advice experiment with $\beta=k^{-2/3}$ with probability at least $\gamma$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:transfer}, $D$ has the three properties with probability at least $\gamma_1$. Given such $D$, the strategies succeed with probability at least $2^{-\ell r_{\mathrm s}}(\alpha/8)^2\,2^{-r_{\mathrm s}}$, by Lemma~\ref{lem:fourier}.
+\end{proof}
+
+\emph{Step 5: repetition.}\phantomsection\label{nt:clean} An entry $i$ is \emph{clean} if $o_i$ is a variable and the column of $S_O$ at the coordinate of that variable is zero. On a clean entry, both advice values are zero at the coordinates of that entry. OpenAI takes $k$ to be a cube, so that $\beta$ is rational \cite[Section~7]{OAI}.
+
+\begin{lemma}[{After \cite[Lemma~6.2]{OAI}; compare \cite[Sections~3.3--3.4]{KMS17}}]\label{lem:clean}
+Let $k>1$ be a cube and $\beta=k^{-2/3}$. If $\OPT(\Theta)\le4/5$, then every pair of strategies in the advice experiment satisfies
+\[
+\Prob[\bar\pi z_U=z_O]\ \le\ \Bigl(1-\frac{\beta\,2^{-r_{\mathrm s}}}{3600}\Bigr)^k\ \le\ \exp\bigl(-2^{-r_{\mathrm s}}k^{1/3}/3600\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Given $A$, the column of $S_O$ at a replaced entry is uniform in the image of $A$, so each entry is clean independently with probability $p_A=\beta2^{-\rank A}\ge\beta2^{-r_{\mathrm s}}$. Why does Theorem~\ref{thm:rep} still apply to the clean entries, although the provers receive advice? Fix $A$, the set $I$ of clean entries, the homogeneous column of $S_O$, and, outside $I$, the equations, the replacement choices, and the advice columns. Given $A$, the probability that an entry is clean and replaced by its variable at a specified position is $p_A/3$, whatever the equation. So, conditional on the fixed data, the pairs $(\theta_i,o_i)$ for $i\in I$ are independent random edges of $G_\Theta$. If $\kappa_i$ is the column of $S_O$ at the variable of a replaced entry $i$, the $U$-advice has columns $(\kappa_i,0)$, $(0,\kappa_i)$, or $(\kappa_i,\kappa_i)$ at the two coordinates of $\theta_i$, and in the third case $b_i\kappa_i$ is added to its homogeneous column, where $b_i$ is the right side of $\theta_i$ (proof of Lemma~\ref{lem:tv}). On a clean entry $\kappa_i=0$, so these columns and corrections vanish. Each prover can therefore rebuild its input from the fixed data and its own clean entries, run its strategy, and output its labels on $I$. This defines strategies for the repetition of $G_\Theta$ on $I$, and full agreement $\bar\pi z_U=z_O$ implies that every clean entry is satisfied \cite[proof of Lemma~6.2]{OAI}. Since $\val(G_\Theta)\le14/15$ (Lemma~\ref{lem:evv} with $\OPT(\Theta)\le4/5$), Theorem~\ref{thm:rep} bounds their success by $(1-1/3600)^{|I|}$. Averaging over the binomial law of $|I|$ gives $(1-p_A/3600)^k\le(1-\beta2^{-r_{\mathrm s}}/3600)^k$, and $1-x\le e^{-x}$ with $\beta k=k^{1/3}$ gives the second bound.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:2to2} for weighted games]
+The paragraph after this proof removes the weights. Given $\varepsilon\in(0,1/2)$, put $\eta=\varepsilon/32$ and take $\alpha$ and $r_{\mathrm s}$ from Theorem~\ref{thm:inverse}. Choose $\ell$ large enough for Theorem~\ref{thm:inverse}, with $2^{-(\ell-r_{\mathrm s})}<\alpha/8$ and $2^{-\ell}\le\varepsilon/4$. This fixes $\gamma$. Choose a cube $k$ large enough for Theorem~\ref{thm:inverse} with $m=1+2k$ and for Proposition~\ref{prop:decoding}, with $2^{1-m}\le\varepsilon/4$ and $\exp\bigl(-2^{-r_{\mathrm s}}k^{1/3}/3600\bigr)<\gamma$. Put $\xi=\min\{\varepsilon/(2k),\,1/200\}$. The reduction maps a 3SAT instance to a parity system $\Theta$ by Theorem~\ref{thm:hastad} and OpenAI's Lemma~4.2 (Chapter~\ref{ch:outer}), then to $G_{2:2}$ with loops deleted, over the alphabet $K=\F_2^\ell$.
+
+If the formula is satisfiable, $\OPT(\Theta)\ge1-\xi$. Since $\rho_0\le2^{-\ell}+2^{1-m}\le\varepsilon/2$, the paragraph ``Completeness'' at the end of Chapter~\ref{ch:inner} gives $\val(G_{2:2})\ge1-k\xi-\rho_0\ge1-\varepsilon$.
+
+If the formula is unsatisfiable, $\OPT(\Theta)\le4/5$. A labeling with value greater than $\varepsilon$ after deleting loops has value at least $\varepsilon$ before. Proposition~\ref{prop:decoding} would then give strategies in the advice experiment with $\Prob[\bar\pi z_U=z_O]\ge\gamma$, while Lemma~\ref{lem:clean} bounds this probability by $\exp\bigl(-2^{-r_{\mathrm s}}k^{1/3}/3600\bigr)<\gamma$. Hence $\val(G_{2:2})\le\varepsilon$.
+\end{proof}
+
+\paragraph{Uniform weights.} The game $G_{2:2}$ has rational weights inherited from $\Theta$, while Definition~\ref{def:ug} takes weights to be uniform unless stated. Copying edges fixes this. Run the construction with $\varepsilon/2$ in place of $\varepsilon$. If its loopless output has edge set $E$ with probabilities $p_e$, put $N'=\lceil2|E|/\varepsilon\rceil$, and round the numbers $N'p_e$ to nonnegative integers $n_e$ with $\sum_en_e=N'$ and $|n_e-N'p_e|\le1$. Replace each edge $e$ by $n_e$ parallel copies, sampled uniformly. The two laws of a random edge are within total variation distance $|E|/(2N')\le\varepsilon/4$, so every labeling's value changes by at most $\varepsilon/4$. Completeness becomes at least $1-3\varepsilon/4$ and soundness at most $3\varepsilon/4$, and the number of copies is polynomial. This proves Theorem~\ref{thm:2to2} as stated.
+
+\paragraph{What the proof uses.} Steps~2--5 use the labeling only through the folding and sharing identities and through the probability that each $F_U$ passes the equality test. Only Step~1 uses the 2-to-2 test. So the same proof shows that, on unsatisfiable formulas, no labeling of the folded game with the equality test passes it with probability above $\varepsilon$. That game fails in completeness instead, and for every labeling. By the identity in the proof of Lemma~\ref{lem:foldcompare}, a folded labeling passes the equality test with probability equal to half of its 2-to-2 acceptance plus $2^{-\ell-1}$, hence at most $(1+2^{-\ell})/2$.
+
+H\aa stad's proof of Theorem~\ref{thm:hastad} has the same architecture as Part~I: a projection game, a code for its labels with a test, folding, and decoding by Fourier sampling \cite[Section~22.7]{AB09}.
+
+\chapternotes
+OpenAI's overview attributes the ingredients that Part~I shares with its construction to earlier work \cite[Section~1.4]{OAI}: the shared vertices to the virtual tables of Khot and Safra \cite[Section~1.1]{KS13}, folding to Bellare, Goldreich, and Sudan \cite[Section~3.3]{BGS98}, the comparison of question laws (Lemma~\ref{lem:tv}) and decoding by Fourier sampling to Khot and Safra \cite{KS13}, and the advice and clean entries to Khot, Minzer, and Safra \cite{KMS17}.
+
+\chapterquestions
+\begin{question}\label{q:beta}
+Which steps of the soundness proof fail if the outer game is the full $k$-fold repetition of $G_\Theta$ ($\beta=1$), and which fail if $\beta=1/k$?
+\end{question}
+
+\begin{question}\label{q:erasure}
+In the proof of Lemma~\ref{lem:goodadvice}, the values of $F_U$ on $\mathcal B$ are replaced by independent uniform elements of $K$. Why not by a constant?
+\end{question}

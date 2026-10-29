@@ -1,0 +1,96 @@
+\chapter{A fixed gap suffices}\label{ch:games}
+
+OpenAI's folded game has soundness $0.99$ (Proposition~\ref{prop:latentgap}), far from the $\delta$ of the conjecture. Which weaker statement already implies the conjecture? Proposition~\ref{prop:fixedgap} gives one: a single fixed soundness $1-\Delta$, with completeness arbitrarily close to $1$ (Figure~\ref{fig:plane}).
+
+\begin{proposition}\label{prop:fixedgap}
+Let $\Delta\in(0,1)$. Suppose that for every $\varepsilon'\in(0,\Delta)$ there is $\ell(\varepsilon')$ such that $\GapUG_{\F_2^{\ell(\varepsilon')}}(1-\varepsilon',1-\Delta)$ is NP-hard on weighted bipartite translation games. Then for all $\varepsilon,\delta\in(0,1/2)$ there is $N$ such that $\GapUG_{\F_2^N}(1-\varepsilon,\delta)$ is NP-hard on weighted bipartite translation games.
+\end{proposition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=0.9,font=\small]
+\fill[gray!18] (0,0) -- (6,6) -- (0,6) -- cycle;
+\node[gray!60!black,align=center] at (1.6,4.4) {no gap\\$(c\le s)$};
+\draw[->] (0,0) -- (6.5,0) node[below right] {completeness $c$};
+\draw[->] (0,0) -- (0,6.5) node[left] {soundness $s$};
+\draw[gray,dashed] (6,0) -- (6,6) -- (0,6);
+\node[below] at (0,0) {$0$};
+\node[below] at (3,0) {$\tfrac12$};
+\draw (3,-0.08) -- (3,0.08);
+\node[below] at (6,0) {$1$};
+\node[left] at (0,6) {$1$};
+\fill (2.8,0.3) circle (2.2pt);
+\node[above,align=center] at (2.8,0.45) {Corollary~\ref{cor:half}:\\$\bigl(\tfrac{1-\varepsilon}{2},\,\delta\bigr)$};
+\fill[newc] (5.9,4.8) circle (2.2pt);
+\node[newc,right,align=left] at (6.15,4.8) {hypothesis of Proposition~\ref{prop:fixedgap}:\\$(1-\varepsilon',\,1-\Delta)$ for every $\varepsilon'$};
+\fill[newc] (5.7,0.3) circle (2.2pt);
+\node[newc,right,align=left] at (6.15,0.3) {Theorem~\ref{thm:ugt}: $(1-\varepsilon,\,\delta)$};
+\draw[-{Stealth[length=2.2mm]},thick] (5.88,4.65) -- (5.72,0.48);
+\node[right,align=left] at (6.15,2.6) {$n$-fold repetition\\(Proposition~\ref{prop:fixedgap})};
+\end{tikzpicture}
+\caption{NP-hard gap problems $(c,s)$ (schematic): the form of the conjecture, the earlier result, and the route of Proposition~\ref{prop:fixedgap}.}\label{fig:plane}
+\end{figure}
+
+\emph{The idea: repeat the game.} Heuristically, $n$ independent copies of a game $H$ that must all be satisfied should have value about $\val(H)^n$. This is at least $1-n\varepsilon'$ when $\val(H)\ge1-\varepsilon'$, and exponentially small when $\val(H)\le1-\Delta$. The completeness half is a union bound, and the soundness half is Theorem~\ref{thm:rep}.
+
+\begin{proof}[Proof of Proposition~\ref{prop:fixedgap}]
+Given $\varepsilon$ and $\delta$, choose $n$ with $(1-\Delta^2/16)^n\le\delta$ and $\varepsilon/n<\Delta$, and set $\varepsilon'=\varepsilon/n$. We reduce the hypothesized hard problem to the target problem by mapping each instance $H$ of $\GapUG_{\F_2^{\ell(\varepsilon')}}(1-\varepsilon',1-\Delta)$ to $H^{\otimes n}$. Its constraints are products of translations, so it is a translation game over $\F_2^N$ with $N=n\,\ell(\varepsilon')$. Its size is polynomial in that of $H$ because $n$ is fixed. It remains to check completeness and soundness.
+
+\emph{Completeness.} Suppose $\val_\lambda(H)\ge1-\varepsilon'$, and label $H^{\otimes n}$ by $\lambda^{\otimes n}(v_1,\dots,v_n)=(\lambda(v_1),\dots,\lambda(v_n))$. This labeling fails an edge $(e_1,\dots,e_n)$ only if $\lambda$ fails some $e_i$. Each $e_i$ has law $p$, so $\lambda$ fails it with probability at most $\varepsilon'$. By a union bound, $\val(H^{\otimes n})\ge1-n\varepsilon'=1-\varepsilon$.
+
+\emph{Soundness.} If $\val(H)\le1-\Delta$, then $\val(H^{\otimes n})\le(1-\Delta^2/16)^n\le\delta$ by Theorem~\ref{thm:rep}.
+\end{proof}
+
+\emph{Why Theorem~\ref{thm:rep} is stated for projection games.} The proof above uses projections only through Theorem~\ref{thm:rep}, and it uses that theorem through one property: the bound does not depend on the alphabet. The proof needs this because it chooses $n$ first, then $\varepsilon'=\varepsilon/n$, and only then the alphabet $\F_2^{\ell(\varepsilon')}$. In games whose edges carry arbitrary relations instead of maps (general two-prover games), Holenstein's repetition bound is $\bigl(1-\Delta^3/6000\bigr)^{n/\log(|\Sigma||\Sigma'|)}$ for alphabets $\Sigma$ and $\Sigma'$ \cite[Theorem~2.5]{Hol09}, which weakens as the alphabets grow. Some dependence on the alphabet is necessary. Feige and Verbitsky give games of value at most $3/4$ for which the number of repetitions needed to bring the value below $1/8$ grows without bound with the number of labels \cite{FV02}, \cite[Section~1]{Hol09}. With a bound that weakens as the alphabet grows, $n$ would have to grow with $\ell(\varepsilon/n)$, which itself depends on $n$ (Question~\ref{q:holenstein}).
+\paragraph{Loops and weights.} OpenAI's folded game is a weighted translation game, and its random edge can be a loop, for example when $a=0$ or $l=0$. So it is not yet a game in the sense of Definition~\ref{def:ug}. Part~I could delete loops and copy edges because 2-to-2 games may have parallel edges, while Theorem~\ref{thm:ugt} needs simple bipartite graphs. OpenAI's Lemma~7.1 turns this weighted game with loops into an unweighted simple bipartite translation game. It \emph{rounds} each weight to an integer multiple of a common unit and replaces each edge by as many copies as its rounded weight has units. It then \emph{subdivides} each copy into a path of four edges through three new vertices. Subdivision turns a game $H$ into a game of value exactly $1-(1-\val(H))/4$, and rounding changes the value by an amount that can be made arbitrarily small \cite[Lemma~7.1 and Equation~(7.2)]{OAI}. So a game with completeness $1-\varepsilon'$ and soundness $1-\Delta$ becomes one with completeness about $1-\varepsilon'/4$ and soundness about $1-\Delta/4$, with errors as small as desired.
+\paragraph{Assembling Theorem~\ref{thm:ugt}.} Theorem~\ref{thm:ugt} asks, for all $\varepsilon,\delta\in(0,1/2)$, for a polynomial-time reduction from 3SAT to unweighted translation games over some $\F_2^N$ on simple bipartite graphs, with completeness $1-\varepsilon$ and soundness $\delta$. By Proposition~\ref{prop:latentgap}, OpenAI's folded game has value at least $1-k\xi-p_*/2$ on satisfiable formulas (Figure~\ref{fig:pipeline} tracks this bound through the reduction) and at most $0.99$ on unsatisfiable ones. Rounding and subdivision give an unweighted simple bipartite translation game with soundness at most $1-1/800$ \cite[Lemma~7.1]{OAI}, and with completeness $1-\varepsilon'$, where $\varepsilon'$ can be made as small as desired by the choice of $p_*$, $k$, and $\xi$. Proposition~\ref{prop:fixedgap} with $\Delta=1/800$ then gives Theorem~\ref{thm:ugt}. The games from Lemma~7.1 are unweighted and simple, and so are their repetitions: the product of uniform laws on $E$ is uniform on $E^n$, and since the game is simple, distinct tuples of edges join distinct pairs of vertex tuples. The parameters are chosen in the order $(\varepsilon,\delta)\to n\to p_*\to r_*\to(\alpha,r_{\mathrm s})\to\ell\to(\cV,C,\mu)\to k\to\xi$ (simplified from \cite[Equation~(5.4)]{OAI}). These are the last two arrows of Figure~\ref{fig:dependency}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,
+  box/.style={draw,rounded corners=2pt,align=center,inner sep=4pt,minimum height=2.2em},
+  arr/.style={-{Stealth[length=2mm]}},
+  lab/.style={font=\footnotesize,align=center}]
+\node[box] (sat) {3SAT};
+\node[box,right=1.5cm of sat] (lin) {parity equations\\$\OPT(\Theta)\ge1-\xi$};
+\node[box,right=1.5cm of lin] (out) {$k$ equations, all satisfied\\by a best assignment\\with probability $\ge1-k\xi$};
+\draw[arr] (sat) -- node[lab,above] {H\aa stad} node[lab,below] {Thm~\ref{thm:hastad}} (lin);
+\draw[arr] (lin) -- node[lab,above] {sample $k$} node[lab,below] {equations} (out);
+\node[box,below left=1.3cm and -0.4cm of out] (old) {2-to-2 test, split\\value $\le\tfrac12$};
+\node[box,draw=newc,text=newc,below right=1.3cm and -0.4cm of out] (new) {latent test\\value $\ge1-k\xi-p_*/2$};
+\draw[arr] (out) -- node[lab,left] {inner test\\(Ch.~\ref{ch:inner})} (old);
+\draw[arr,newc,thick] (out) -- node[lab,right,text=newc] {inner test\\(Ch.~\ref{ch:openai})} (new);
+\node[box,below=1.4cm of new] (fin) {Unique Games\\value $\ge1-\varepsilon$};
+\draw[arr] (new) -- node[lab,right,align=left] {rounding, subdivision,\\repetition (Prop.~\ref{prop:fixedgap})} (fin);
+\node[lab,below=0.35cm of old] {repetition does not increase the value};
+\end{tikzpicture}
+\caption{Completeness after each step in the YES case, and the upper bound $1/2$ for the 2-to-2 route. The replacement probability $\beta$ of the smooth game (Chapter~\ref{ch:outer}) matters only in the soundness proofs (Chapters~\ref{ch:twotwo} and~\ref{ch:openai}).}\label{fig:pipeline}
+\end{figure}
+
+\paragraph{Part~I and Part~II side by side.} The table lists everything that changes between the two proofs.
+\begin{center}\small
+\begin{tabular}{@{}p{2.1cm}p{5.6cm}p{7.4cm}@{}}
+ & Part~I (Theorem~\ref{thm:2to2}) & Part~II (Theorem~\ref{thm:ugt})\\\hline
+tables & $M\in\Hom(L_U,K)$ & $P=(M,T)\in\Hom(L_U,\cV)$, $\cV=K\oplus\cW$\\
+encoding & $M\mapsto Mz$ & $P\mapsto C(Pz)$\\
+test & 2-to-2 test, $a$ uniform in $K$ & latent test, $a\sim\mu$ on $\cV$\\
+constraints & 2-to-2 & translations\\
+completeness & $\ge1-k\xi-\rho_0$ & $\ge1-k\xi-p_*/2$\\
+Step 1 & folding (Lemma~\ref{lem:foldcompare}) & Fourier comparison, which needs acceptance above $7/8$\\
+Steps 2--5 & Chapter~\ref{ch:twotwo} & with $(U,T)$ in place of $U$, and $2^{-\dim\cW-r_{\mathrm s}}$ in Lemma~\ref{lem:clean}\\
+soundness & $\varepsilon$ & $0.99$, then \cite[Lemma~7.1]{OAI} and Proposition~\ref{prop:fixedgap}\\
+loops, weights & loops deleted, edges copied (parallel edges allowed) & rounding and subdivision\\
+\end{tabular}
+\end{center}
+
+\chapternotes
+OpenAI's overview \cite[Section~1.4]{OAI} presents the latent gadget (Lemma~\ref{lem:latent}) and the Fourier comparison as its change, and the other ingredients as adapted from earlier work (Notes to Chapter~\ref{ch:twotwo}).
+
+\chapterquestions
+\begin{question}\label{q:holenstein}
+Suppose the repetition bound for alphabet $\F_2^\ell$ were $\zeta^{n/\ell}$, with $0<\zeta<1$ depending only on $\Delta$ (the form of Holenstein's bound). For which growth rates of $\ell(\varepsilon')$ does the proof of Proposition~\ref{prop:fixedgap} still work?
+\end{question}
+
+\begin{question}\label{q:subdivision}
+Let $H$ be a weighted translation game. Replace each edge $e=(v,w)$, with offset $b_e$, by a path $v,x_1,x_2,x_3,w$ through three new vertices, whose four edges carry offsets with sum $b_e$ and have weight $p_e/4$ each. Show that the new game has value exactly $1-(1-\val(H))/4$.
+\end{question}

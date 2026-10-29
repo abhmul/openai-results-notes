@@ -1,0 +1,14 @@
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+build.log
+*.txt
+# Machine-local agent working material; the directory guide is shared.
+/agents/local/*
+!/agents/local/README.md

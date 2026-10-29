@@ -1,0 +1,49 @@
+\chapter{Functions that pass the equality test}\label{ch:soundness}
+
+Soundness needs a converse to Lemma~\ref{lem:completeness}. Chapter~\ref{ch:twotwo} reduces the 2-to-2 test to the equality test (Lemma~\ref{lem:foldcompare}), so the converse is needed for the equality test. If $f:\Mat_{\ell,m}\to\F_2^\ell$ passes the equality test with probability bounded below, must $f$ be close to an encoding? The natural guess is that $f$ agrees with some affine map $M\mapsto Mz+u$ on a constant fraction of all matrices. Example~\ref{ex:zoomout} shows that this guess fails, and Theorem~\ref{thm:inverse} gives the correct statement, which is local.
+
+The guess fails because a test step stays in its column slice, defined next, with the same probability with which an encoding passes the equality test. For $q\in\F_2^m\setminus\{0\}$ and $t\in\F_2^\ell$, the \emph{column slice} is $\{M:Mq=t\}$. Since $(M+al^\top)q=Mq+a(l^\top q)$, a test step stays in its column slice with probability $(1+2^{-\ell})/2$, the acceptance probability of an encoding. So a function can use a different encoding on each column slice.
+
+\begin{example}\label{ex:zoomout}
+Fix $q\ne0$ and a complement $\mathcal C_q\subseteq\F_2^m$ of $\Span\{q\}$, take distinct $z_t\in\mathcal C_q$ for $t\in\F_2^\ell$ (possible when $m\ge\ell+1$), and let $f(M)=Mz_{Mq}$, which is the encoding $f_{z_t}$ on the slice $Mq=t$ (Figure~\ref{fig:slices}).
+
+\emph{$f$ passes the equality test with probability at least $1/4$.} Condition on $Mq=t$. If $l^\top q=l^\top z_t=0$, then $(M+al^\top)q=t$, so the step stays in the slice, and $f(M+al^\top)=(M+al^\top)z_t=Mz_t=f(M)$. Since $q$ and $z_t$ are linearly independent or $z_t=0$, this event has conditional probability at least $1/4$. Averaging over $t$ proves the claim.
+
+\emph{$f$ is far from every encoding.} Fix $z\in\F_2^m$ and $u\in\F_2^\ell$, and write $z=z'+\nu q$ with $z'\in\mathcal C_q$ and $\nu\in\F_2$. On the slice $Mq=t$, the event $f(M)=Mz+u$ reads $M(z_t-z')=\nu t+u$. If $z_t\ne z'$, then $z_t-z'$ and $q$ are linearly independent, so $M(z_t-z')$ is uniform given $Mq=t$, and the event has probability $2^{-\ell}$. At most one $t$ has $z_t=z'$, and $\Prob[Mq=t]=2^{-\ell}$. Hence $\Prob_M[f(M)=Mz+u]\le2^{-\ell}+2^{-\ell}=2^{1-\ell}$.
+\end{example}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small]
+\draw (0,0) rectangle (8,3);
+\foreach \x in {2,4,6} { \draw (\x,0) -- (\x,3); }
+\node at (1,2.6) {$Mq=t_1$};
+\node at (3,2.6) {$Mq=t_2$};
+\node at (5,2.6) {$Mq=t_3$};
+\node at (7,2.6) {$\cdots$};
+\node at (1,0.35) {$f=f_{z_{t_1}}$};
+\node at (3,0.35) {$f=f_{z_{t_2}}$};
+\node at (5,0.35) {$f=f_{z_{t_3}}$};
+\fill (0.6,1.5) circle (1.5pt); \fill (1.5,1.2) circle (1.5pt);
+\draw[-{Stealth[length=2mm]},thick] (0.6,1.5) -- (1.5,1.2);
+\fill (3.4,1.5) circle (1.5pt); \fill (4.6,1.25) circle (1.5pt);
+\draw[-{Stealth[length=2mm]},thick,dashed] (3.4,1.5) -- (4.6,1.25);
+\node[right,align=left] at (8.2,2.1) {\tikz{\draw[thick,-{Stealth[length=2mm]}] (0,0)--(0.6,0);} step with $a\,(l^\top q)=0$:\\stays in its slice};
+\node[right,align=left] at (8.2,0.9) {\tikz{\draw[thick,dashed,-{Stealth[length=2mm]}] (0,0)--(0.6,0);} step with $a\,(l^\top q)\ne0$:\\changes slice};
+\node[below] at (4,0) {$\Mat_{\ell,m}$, divided by the value of $Mq$};
+\end{tikzpicture}
+\caption{The function of Example~\ref{ex:zoomout}: a different encoding on each column slice (schematic). Three of the $2^\ell$ column slices are shown.}\label{fig:slices}
+\end{figure}
+
+Since the function of Example~\ref{ex:zoomout} agrees with an encoding on each column slice, the correct statement concerns agreement on slices. Besides column slices, the correct statement uses row slices: for $d\in\F_2^\ell\setminus\{0\}$ and $t'\in\F_2^m$, the \emph{row slice} is $\{M:M^\top d=t'\}$.
+
+\begin{theorem}[Inverse shortcode theorem {\cite[Theorem~5.1]{OAI}}]\label{thm:inverse}
+For every $\eta\in(0,1)$ there are $\alpha>0$ and an integer $r_{\mathrm s}\ge1$ such that for all large $\ell$, then all large $m$: if $f:\Mat_{\ell,m}\to\F_2^\ell$ passes the equality test with probability at least $\eta$, then some nonempty slice defined by at most $r_{\mathrm s}$ row and $r_{\mathrm s}$ column equations and some $z,u$ satisfy $\Prob_{M\mid\text{slice}}[f(M)=Mz+u]\ge\alpha$.
+\end{theorem}
+
+\emph{Where Theorem~\ref{thm:inverse} comes from.} It follows from the Grassmann expansion theorem of Khot, Minzer, and Safra \cite{KMS23}, in the form stated in \cite[proof of Theorem~5.1]{OAI}, applied through the map $M\mapsto\mathrm{graph}(M^\top)$. Two $\ell$-dimensional subspaces are adjacent in the \emph{Grassmann graph} when their intersection has dimension $\ell-1$. The map sends $M$ to $\mathrm{graph}(M^\top)\subseteq\F_2^\ell\oplus\F_2^m$, an $\ell$-dimensional subspace, and satisfies $\dim\bigl(\mathrm{graph}(M^\top)\cap\mathrm{graph}(M'^\top)\bigr)=\ell-\rank(M-M')$. So nonzero rank-one updates are Grassmann edges between image subspaces. Among the image subspaces, row slices are the subspaces containing a fixed vector (\emph{zoom-ins}) and column slices those inside a fixed hyperplane (\emph{zoom-outs}). The equality test accepts exactly when $M$ and $M+al^\top$ lie in the same fiber $f^{-1}(y)$, so its acceptance probability is an average, over fibers, of the probability that a random step from a point of the fiber stays in it. The Grassmann expansion theorem says that a set of subspaces with this probability bounded below by a positive constant has density bounded below on an intersection of boundedly many zoom-ins and zoom-outs. On that slice $f$ takes the fiber's value $y$ with probability bounded below, which is the conclusion of Theorem~\ref{thm:inverse} with $z=0$ and $u=y$ \cite[proof of Theorem~5.1]{OAI}. So agreement alone need not identify a label, and the decoding of Chapter~\ref{ch:twotwo} recovers labels from the column directions of the slice, using folding (Lemma~\ref{lem:labelset}).
+
+\chapterquestions
+\begin{question}\label{q:rowslices}
+Build the analogue of Example~\ref{ex:zoomout} from row slices. Why does Theorem~\ref{thm:inverse} need both kinds of slices?
+\end{question}

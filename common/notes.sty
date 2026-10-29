@@ -1,0 +1,59 @@
+% Shared preamble for the lecture notes in this repository (book class).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{notes}[2026/10/29 Shared preamble for course notes]
+
+\RequirePackage[margin=1in]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{microtype}
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\RequirePackage{enumitem}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit}
+\RequirePackage{caption}
+\RequirePackage{needspace}
+\RequirePackage{longtable}
+\RequirePackage{titlesec}
+\RequirePackage[section]{placeins}
+\RequirePackage[hidelinks]{hyperref}
+
+\captionsetup{font=small,labelfont=bf}
+\setlist{itemsep=2pt,topsep=4pt}
+
+% Parts share a page with their opening text; chapters start a new page.
+\titleclass{\part}{top}
+\titleformat{\part}[display]{\centering\normalfont\Large\bfseries}{\partname~\thepart}{0.4em}{\LARGE}
+\titlespacing*{\part}{0pt}{0pt}{1.5em}
+\titleformat{\chapter}[hang]{\normalfont\LARGE\bfseries}{\thechapter}{0.8em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{1.2em}
+\setcounter{tocdepth}{0}
+
+% Results are numbered by chapter.
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}{Question}[chapter]
+
+% General macros.
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Mat}{\operatorname{Mat}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\ind}{\mathbf{1}}
+% In figures, blue marks what a later part adds or replaces.
+\definecolor{newc}{RGB}{0,90,190}
+
+% Chapter-end sections, not listed in the contents.
+\newcommand{\chapternotes}{\section*{Notes}}
+\newcommand{\chapterquestions}{\section*{Questions}}
+
+\endinput

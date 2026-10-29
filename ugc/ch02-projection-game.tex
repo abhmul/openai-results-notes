@@ -1,0 +1,111 @@
+\chapter{A projection game from parity equations}\label{ch:outer}
+
+How can a reduction from 3SAT produce games in which each constraint involves only two vertices? OpenAI's construction, used in both parts of these notes, first produces a \emph{projection game} from H\aa stad's parity equations. Its constraints are maps rather than permutations. The construction of Chapter~\ref{ch:inner} relies on exactly this: when the constraint of an edge is a map, the label at one endpoint determines the label that the other endpoint must have.
+
+\begin{definition}[Projection game]\label{def:projection}
+A \emph{projection game} $G$ consists of a finite bipartite graph $(V,W,E)$ with a probability distribution $p$ on $E$, a finite alphabet $\Sigma_v$ for each $v\in V$ and $\Sigma_w$ for each $w\in W$, and a map $\pi_e:\Sigma_v\to\Sigma_w$ for each edge $e=(v,w)$. A labeling assigns a label $\lambda(v)\in\Sigma_v$ to each $v\in V$ and $\lambda(w)\in\Sigma_w$ to each $w\in W$, and $\val(G)=\max_\lambda\Prob_{e=(v,w)\sim p}\bigl[\pi_e(\lambda(v))=\lambda(w)\bigr]$.
+\end{definition}
+
+A bipartite unique game is the special case in which all alphabets equal one $K$ and every $\pi_e$ is a bijection. Projection games are often described as interactions of a verifier with two provers, and these notes use that language only for the advice experiment of Chapters~\ref{ch:twotwo} and~\ref{ch:openai}, where what each prover receives matters. A \emph{verifier} samples $e=(v,w)\sim p$, sends $v$ to a first \emph{prover} and $w$ to a second, and accepts if the labels $\lambda(v),\lambda(w)$ that the provers return satisfy $\pi_e(\lambda(v))=\lambda(w)$. A \emph{strategy} for the provers is a labeling, and the verifier accepts with probability $\val_\lambda(G)$.
+
+The starting point is H\aa stad's theorem: approximating systems of parity equations is NP-hard.
+
+\begin{theorem}[{H\aa stad 2001 \cite[Theorem~5.4 and its proof]{Hastad01}; see also \cite[Theorem~22.16 and Section~22.4.1]{AB09}}]\label{thm:hastad}
+For every $\xi\in(0,1/4)$, the following problem is NP-hard. A system $\Theta$ consists of equations $x+x'+x''=b$ over $\F_2$ in variables from a set $X$, together with a probability distribution $p$ on the equations. Let $\OPT(\Theta)=\max_{\mathbf x\in\F_2^X}\Prob_{\theta\sim p}[\mathbf x\text{ satisfies }\theta]$. Given $\Theta$ with $\OPT(\Theta)\ge1-\xi$ or $\OPT(\Theta)\le1/2+\xi$, decide which holds.
+\end{theorem}
+
+Both constants in Theorem~\ref{thm:hastad} are optimal, for the two reasons met in Chapter~\ref{ch:ug}. With $\xi=0$ the problem is in P (Gaussian elimination), so NP-hardness requires completeness below $1$ unless $\mathrm{P}=\mathrm{NP}$. And $\OPT(\Theta)\ge1/2$ for every system: some variable occurs an odd number of times in each equation, so a uniformly random assignment $\mathbf x$ satisfies each equation with probability exactly $1/2$, and $\E_{\mathbf x}\Prob_{\theta\sim p}[\mathbf x\text{ satisfies }\theta]=1/2$. So when $\OPT(\Theta)\le1/2+\xi$, every assignment $\mathbf x$ has $\Prob_{\theta\sim p}[\mathbf x\text{ satisfies }\theta]$ at most $\xi$ above its average $1/2$ over uniformly random $\mathbf x$.
+
+To make a projection game, pair each equation with each of its variables. This construction requires the three variables of every equation to be distinct. For $\xi<1/100$, OpenAI's Lemma~4.2 replaces each system $\Theta$ of Theorem~\ref{thm:hastad} by a system $\Theta'$ with three distinct variables in each equation, such that $\OPT(\Theta')\ge1-\xi$ if $\OPT(\Theta)\ge1-\xi$ (the \emph{YES case}) and $\OPT(\Theta')\le4/5$ if $\OPT(\Theta)\le1/2+\xi$ (the \emph{NO case}) \cite[Lemma~4.2]{OAI}. From now on, $\Theta$ denotes the new system.
+
+\begin{definition}[Equation-versus-variable game]\label{def:evv}
+For a system $\Theta$ on variables $X$, with distribution $p$ and three distinct variables in each equation, $G_\Theta$ is the projection game with $V=\Theta$, $W=X$, and an edge $(\theta,x)$ for each equation $\theta$ and each of its three variables $x$. Its random edge is $(\theta,x)$ with $\theta\sim p$ and $x$ uniform among the variables of $\theta$. The alphabet $\Sigma_\theta$ is the set of four satisfying assignments $\phi$ of the variables of $\theta$, the alphabet of a variable is $\Sigma_x=\F_2$, and $\pi_{(\theta,x)}(\phi)=\phi(x)$ (Figure~\ref{fig:evv}).
+\end{definition}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,a/.style={draw,rounded corners=1pt,inner sep=2pt,minimum width=9mm}]
+\node at (0,2.25) {$\theta:\ x_1+x_2+x_3=1$};
+\node[a] (a1) at (0,1.5) {$100$};
+\node[a] (a2) at (0,0.9) {$010$};
+\node[a] (a3) at (0,0.3) {$001$};
+\node[a] (a4) at (0,-0.3) {$111$};
+\node at (4,2.25) {variable $x_2$};
+\node[a] (b0) at (4,1.2) {$0$};
+\node[a] (b1) at (4,0.0) {$1$};
+\foreach \s/\t in {a1/b0,a3/b0,a2/b1,a4/b1} \draw[-{Stealth[length=1.6mm]}] (\s.east) -- (\t.west);
+\node at (2,1.85) {$\pi_e$};
+\end{tikzpicture}
+\caption{One edge $e=(\theta,x_2)$ of $G_\Theta$. Each bit has two preimages under $\pi_e$, so $\pi_e$ is 2-to-1.}\label{fig:evv}
+\end{figure}
+
+The value of $G_\Theta$ is at least $\OPT(\Theta)$: label the variables by a best assignment, and each equation it satisfies by its restriction. In the YES case, $\val(G_\Theta)\ge1-\xi$. Lemma~\ref{lem:evv} bounds $\val(G_\Theta)$ from above.
+
+\begin{lemma}\label{lem:evv}
+$\val(G_\Theta)\le1-\bigl(1-\OPT(\Theta)\bigr)/3$.
+\end{lemma}
+
+\begin{proof}
+Fix a labeling $\lambda$. Its labels $\lambda(x)\in\F_2$ of the variables form an assignment of $\Theta$. Recall from Definition~\ref{def:evv} that the random edge is $(\theta,x)$, with $\theta\sim p$ and $x$ uniform among the three variables of $\theta$, and that it fails exactly when $\phi(x)\ne\lambda(x)$, where $\phi=\lambda(\theta)$.
+
+Fix an equation $\theta$ that the assignment violates. Its label $\phi$ satisfies $\theta$, so some variable $x^*$ of $\theta$ has $\phi(x^*)\ne\lambda(x^*)$. Given $\theta$, the edge therefore fails with conditional probability at least $\Prob[x=x^*]=1/3$.
+
+The assignment violates $\theta\sim p$ with probability at least $1-\OPT(\Theta)$. Hence the random edge fails with probability at least $\tfrac13\bigl(1-\OPT(\Theta)\bigr)$, which is the claim.
+\end{proof}
+
+With $\OPT(\Theta)\le4/5$, Lemma~\ref{lem:evv} gives $\val(G_\Theta)\le14/15$.
+
+A value of at most $14/15$ is far from small. Repetition draws $n$ independent random edges at once and requires one labeling of the $n$-tuples to satisfy all of them.
+
+\begin{definition}[Repetition]\label{def:rep}
+For $n\ge1$, the \emph{$n$-fold repetition} $G^{\otimes n}$ is the projection game on $(V^n,W^n)$ in which a vertex $(v_1,\dots,v_n)$ has alphabet $\Sigma_{v_1}\times\cdots\times\Sigma_{v_n}$, and likewise on $W^n$. Its random edge $\mathbf e=(e_1,\dots,e_n)$ has independent entries $e_i\sim p$, and its projection is $\pi_{\mathbf e}=\pi_{e_1}\times\cdots\times\pi_{e_n}$.
+\end{definition}
+
+A labeling of $G^{\otimes n}$ need not act entry by entry, so $\val(G^{\otimes n})$ can exceed $\val(G)^n$. The value still decays exponentially, at a rate that does not depend on the alphabet.
+
+\begin{theorem}[{Rao 2011 \cite{Rao11}; Dinur--Steurer 2014 \cite[Corollary~1.2]{DS14}}]\label{thm:rep}
+Let $G$ be a projection game, $n\ge1$, and $\Delta\in(0,1)$. If $\val(G)\le1-\Delta$, then $\val(G^{\otimes n})\le(1-\Delta^2/16)^n$, whatever the alphabets.
+\end{theorem}
+
+Theorem~\ref{thm:rep} makes the value of a repetition of $G_\Theta$ small in the NO case. The soundness proof of Chapter~\ref{ch:twotwo} also uses that the two endpoints of a random edge differ in few entries, fewer than about $\sqrt k$ (Lemma~\ref{lem:tv}). In $G_\Theta^{\otimes k}$ they differ in every entry, since one endpoint is a tuple of equations and the other a tuple of variables. The smooth game replaces each equation only with a small probability $\beta$.
+
+\begin{definition}[Smooth $k$-fold game]\label{def:smooth}
+For $k\ge1$ and $\beta\in(0,1)$, the \emph{smooth $k$-fold game} is the projection game whose random edge $(U,O)$ is drawn as follows. Its first endpoint is $U=(\theta_1,\dots,\theta_k)$ with independent $\theta_i\sim p$. Independently for each $i$, let $o_i=\theta_i$ with probability $1-\beta$, and otherwise let $o_i$ be a uniformly random variable of $\theta_i$. The second endpoint is $O=(o_1,\dots,o_k)$ (Figure~\ref{fig:smooth}). The alphabet $\Sigma_U$ is the product of the alphabets of $\theta_1,\dots,\theta_k$, and $\Sigma_O$ the product of the alphabets of $o_1,\dots,o_k$, with separate factors for repeated equations or variables. The projection maps a label $(\phi_1,\dots,\phi_k)$ of $U$ to the label of $O$ whose $i$th entry is $\phi_i$ if $o_i=\theta_i$ and $\phi_i(o_i)$ if $o_i$ is a variable.
+\end{definition}
+
+In the YES case, a best assignment satisfies all $k$ equations of $U$ with probability at least $1-k\xi$, by a union bound. If $\beta=0$, then $O=U$ and the smooth game has value $1$, so $\beta$ must be positive. Chapter~\ref{ch:twotwo} needs both $\beta k\to\infty$, so that the number of replaced entries grows and Theorem~\ref{thm:rep} applies to them (Lemma~\ref{lem:clean}), and $k\beta^2\to0$, for the comparison of laws in Lemma~\ref{lem:tv}. OpenAI takes $\beta=k^{-2/3}$, so $\beta k=k^{1/3}\to\infty$ and $k\beta^2=k^{-1/3}\to0$.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\small,
+  eq/.style={draw,minimum width=0.95cm,minimum height=0.6cm},
+  var/.style={draw,circle,minimum size=0.6cm,inner sep=0pt}]
+\node at (-0.9,1.2) {$U$};
+\node at (-0.9,0) {$O$};
+\foreach \i in {1,...,8} {
+  \node[eq] (u\i) at ({1.15*(\i-1)},1.2) {$\theta_{\i}$};
+}
+\foreach \i in {1,2,4,5,7,8} {
+  \node[eq] (o\i) at ({1.15*(\i-1)},0) {$\theta_{\i}$};
+  \draw[-{Stealth[length=1.6mm]}] (u\i) -- (o\i);
+}
+\foreach \i in {3,6} {
+  \node[var] (o\i) at ({1.15*(\i-1)},0) {$x$};
+  \draw[-{Stealth[length=1.6mm]},dashed] (u\i) -- (o\i);
+}
+\node[right,font=\footnotesize] at (8.6,1.2) {first endpoint};
+\node[right,font=\footnotesize] at (8.6,0) {second endpoint};
+\end{tikzpicture}
+\caption{A random edge $(U,O)$ of the smooth game ($k=8$). Each equation is replaced with probability $\beta$ by one of its variables ($x$), chosen uniformly.}\label{fig:smooth}
+\end{figure}
+
+\paragraph{Labels as vectors.}\phantomsection\label{nt:labels} Chapter~\ref{ch:inner} encodes a label by evaluating linear maps on it, so the labels of the smooth game must be vectors and its projections linear maps. Each vertex $Q$ of the smooth game is a $k$-tuple whose entries are equations or variables: every entry of $U$ is an equation, and an entry of $O$ is a variable wherever an equation was replaced. A label of $Q$ assigns each equation entry one of its four satisfying assignments and each variable entry a bit. A satisfying assignment $(\phi_1,\phi_2,\phi_3)$ of an equation with right side $b$ is determined by $(\phi_1,\phi_2)$, since $\phi_3=b+\phi_1+\phi_2$. So a label of $Q$ is a list of $d_Q$ bits, two for each equation entry and one for each variable entry. In these bits, restriction to $O$ is affine but in general not linear: a variable entry of $O$ may receive the value $\phi_3=b+\phi_1+\phi_2$, which has the constant term $b$. One extra coordinate removes the constant. Let $L_Q=\F_2^{1+d_Q}$, with coordinates indexed from $0$, and represent a label by the vector $z\in L_Q$ with $z_0=1$ followed by its $d_Q$ bits. The coordinate $z_0$ is the \emph{homogeneous coordinate}. Since $\phi_3=bz_0+\phi_1+\phi_2$ is linear in $z$, restriction extends to a linear map $\bar\pi:L_U\to L_O$ that keeps the homogeneous coordinate, $(\bar\pi z)_0=z_0$ \cite[Section~4.2]{OAI}. The labels of $Q$ are exactly the vectors $z\in L_Q$ with $z_0=1$. For a first endpoint $U$, $d_U=2k$, so $L_U=\F_2^m$ with $m=1+2k$.
+
+\chapterquestions
+\begin{question}\label{q:evvexact}
+Show that Lemma~\ref{lem:evv} is an equality: $\val(G_\Theta)=1-\bigl(1-\OPT(\Theta)\bigr)/3$.
+\end{question}
+
+\begin{question}\label{q:pibar}
+Let $k=1$ and $U=(\theta)$ with $\theta:\ x_1+x_2+x_3=b$, and give $L_U$ the coordinates $(z_0,\phi_1,\phi_2)$. Write the matrix of $\bar\pi$ when $O$ replaces $\theta$ by $x_3$, and when $O$ replaces $\theta$ by $x_1$. Which of the two restrictions is linear on the bits $(\phi_1,\phi_2)$ without the homogeneous coordinate?
+\end{question}

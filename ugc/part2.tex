@@ -1,0 +1,26 @@
+\part{OpenAI's upgrade to unique games}
+
+Part~II proves Theorem~\ref{thm:ugt} by changing the proof of Theorem~\ref{thm:2to2}. Chapter~\ref{ch:openai} replaces the 2-to-2 test by a test whose constraints are permutations, and carries Steps~2--5 over to larger tables. The new Step~1 applies only to labelings that pass the new test with probability above $7/8$, so the proof gives soundness $0.99$, not $\delta$. Chapter~\ref{ch:games} shows that soundness bounded away from $1$, with completeness arbitrarily close to $1$, suffices. Figure~\ref{fig:dependency} shows how the results combine.
+
+\begin{figure}[ht]
+\renewcommand{\thefigure}{II}\renewcommand{\theHfigure}{partII}
+\centering
+\begin{tikzpicture}[font=\small,
+  box/.style={draw,rounded corners=2pt,align=center,text width=5.6cm,inner sep=4pt},
+  nbox/.style={box,draw=newc,text=newc},
+  arr/.style={-{Stealth[length=2mm]}}]
+\node[nbox] (gadget) at (0,0) {tables with values in a space larger than $K$, a nonlinear encoding, and a new law of the test vector $a$ (Lemma~\ref{lem:latent})};
+\node[nbox] (comp) at (-3.3,-2.3) {completeness: encodings fail the new test with probability as small as desired (Chapter~\ref{ch:openai})};
+\node[nbox] (step1) at (3.3,-2.3) {new Step~1: acceptance at least $0.99$ in the new test implies acceptance bounded below in the equality test (Chapter~\ref{ch:openai})};
+\node[box] (steps) at (3.3,-5.0) {Steps~2--5 of Chapter~\ref{ch:twotwo} for the larger tables (Theorems~\ref{thm:inverse} and~\ref{thm:rep}): soundness $0.99$ (Proposition~\ref{prop:latentgap})};
+\node[nbox] (gap) at (0,-7.4) {loops and weights removed \cite[Lemma~7.1]{OAI}, then repetition of the game (Proposition~\ref{prop:fixedgap})};
+\node[box] (ugt) at (0,-9.1) {Theorem~\ref{thm:ugt}};
+\draw[arr] (gadget) -- (comp);
+\draw[arr] (gadget) -- (step1);
+\draw[arr] (step1) -- (steps);
+\draw[arr] (comp) |- (gap);
+\draw[arr] (steps) |- (gap);
+\draw[arr] (gap) -- (ugt);
+\end{tikzpicture}
+\caption{The proof of Theorem~\ref{thm:ugt}, built on the construction of Chapters~\ref{ch:outer} and~\ref{ch:inner}. Arrows point from a result to the results that use it. Blue boxes are new in Part~II. The black box is Part~I's Steps~2--5 carried over to the larger tables, which Chapter~\ref{ch:openai} sketches with references to \cite[Lemmas~5.5--5.7 and~6.2]{OAI}.}\label{fig:dependency}
+\end{figure}
