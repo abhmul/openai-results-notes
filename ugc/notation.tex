@@ -7,13 +7,13 @@ symbol & meaning & page\\\hline
 \endhead
 $K$ & alphabet of a unique game; from Chapter~\ref{ch:inner} on, $K=\F_2^\ell$ & \pageref{def:ug}\\
 $p$ & distribution on the edges of a game (its weights); for a parity system, on its equations & \pageref{def:ug}\\
-$\val_\lambda(G)$, $\val(G)$ & value of a labeling $\lambda$ of a game $G$, and its maximum over labelings & \pageref{def:ug}\\
+$\val_\lambda(G)$, $\val(G)$ & value of a labeling $\lambda$ of a game $G$, and the maximum value over labelings & \pageref{def:ug}\\
 $\GapUG_K(c,s)$ & given a unique game over $K$ with $\val\ge c$ or $\val\le s$, deciding which holds & \pageref{nt:gap}\\
 $\Theta$, $\OPT(\Theta)$, $\xi$ & parity system, its optimum, H\aa stad's parameter & \pageref{thm:hastad}\\
 $G_\Theta$ & equation-versus-variable game & \pageref{def:evv}\\
 $G^{\otimes n}$ & $n$-fold repetition of a projection game & \pageref{def:rep}\\
 $k$, $\beta$, $(U,O)$ & number of equations in $U$, replacement probability, random edge of the smooth game & \pageref{def:smooth}\\
-$L_Q$, $z_0$, $\bar\pi$ & label space of a vertex $Q$, homogeneous coordinate, linear restriction $L_U\to L_O$ & \pageref{nt:labels}\\
+$L_Q$, $z_0$, $\bar\pi$ & space of a vertex $Q$ (the labels of $Q$ are the vectors of $L_Q$ with $z_0=1$); homogeneous coordinate; linear restriction $L_U\to L_O$ & \pageref{nt:labels}\\
 $m$ & $\dim L_U=1+2k$ & \pageref{nt:labels}\\
 $\ell$ & $K=\F_2^\ell$ in the constructed games & \pageref{nt:clouds}\\
 $P$, $M$, $\Mat_{\ell,m}$ & table on a vertex; table on a first endpoint, an element of $\Mat_{\ell,m}=\Hom(L_U,K)$ (in Part~II, the $K$-component of $P$) & \pageref{nt:clouds}\\
@@ -24,7 +24,7 @@ $P^{+h}$, $e_0$, $F_Q$ & $P+he_0^\top$, the basis vector of the homogeneous coor
 $G_{2:2}$, $\rho_0$ & the 2-to-2 game, the total probability of its loops & \pageref{def:G22}\\
 $\eta$, $\alpha$, $r_{\mathrm s}$ & parameters of the inverse theorem & \pageref{thm:inverse}\\
 $A$, $M_O$, $S_O$ & advice experiment: row combinations, hidden table, advice $AM_O$ & \pageref{def:advice}\\
-good triple, certificate & a triple $(U,A,S)$ such that, for some at most $r_{\mathrm s}$ column equations $Mq_j=t_j$, the slice $\{M:AM=S,\ Mq_j=t_j\}$ is nonempty and $F_U$ agrees with some $Mz+u$ on at least an $\alpha/2$ fraction of it; those equations and that target & \pageref{nt:good}\\
+good triple, certificate & a triple $(U,A,S)$ such that, for some at most $r_{\mathrm s}$ column equations $Mq_j=t_j$, the slice $\{M:AM=S,\ Mq_j=t_j\}$ is nonempty and $F_U$ agrees with some $Mz+u$ on at least an $\alpha/2$ fraction of the slice; those equations and that target & \pageref{nt:good}\\
 $Z$, $\mathcal A$ & span of the certificate's column vectors, the set of candidate labels & \pageref{lem:labelset}\\
 $v_k$ & total variation bound for pullbacks & \pageref{lem:tv}\\
 $D$, $z'$, $\mathcal S'$ & data that determine both inputs, restricted target vector, transferred slice & \pageref{nt:transfer}\\
@@ -32,7 +32,7 @@ $\gamma_1$, $\gamma$ & lower bound on the probability that $D$ has the propertie
 clean entry, $p_A$ & replaced entry whose advice column is zero (in Part~II, also the column of $T_O$), the probability of this event & \pageref{nt:clean}\\
 $\cV$, $C$, $\mu$ & latent gadget: space containing $K$, nonlinear encoding map $\cV\to K$, latent noise & \pageref{lem:latent}\\
 $p_*$, $r_*$ & bound in property (ii); rank from which property (iii) guarantees detection & \pageref{lem:latent}\\
-$\Lambda_{\boldsymbol g}$, $\rho(\boldsymbol g)$, $\tau$ & multiplier of a character, rank of its restriction to $K$, ordinary-test bound & \pageref{nt:comparison}\\
+$\Lambda_{\boldsymbol g}$, $\rho(\boldsymbol g)$, $\tau$ & multiplier of a character, $\rho(\boldsymbol g)=\dim\Span\{g_i|_K\}$, ordinary-test bound & \pageref{nt:comparison}\\
 $\cW$, $T$ & complement of $K$ in $\cV$, extra component of a table & \pageref{nt:comparison}\\
 $\Delta$, $n$ & the hypothesized soundness is $1-\Delta$; number of repetitions & \pageref{prop:fixedgap}\\
 \end{longtable}

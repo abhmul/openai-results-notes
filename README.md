@@ -10,7 +10,7 @@ Course notes for reading groups that study recent mathematical results from Open
 
 ## Status of the mathematics
 
-- OpenAI's *The Unique Games Theorem* is a preprint (September 23, 2026) with a Lean formalization in its repository. It has not been refereed.
+- OpenAI's *The Unique Games Theorem* is an unrefereed preprint (September 23, 2026) whose repository contains a Lean formalization.
 - Part I of the Unique Games notes assembles the 2-to-2 proof inside OpenAI's framework. This assembly is new to the notes and has not been refereed.
 - The notes were prepared with AI assistance (Claude). Corrections are welcome as GitHub issues.
 

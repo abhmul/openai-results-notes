@@ -7,7 +7,7 @@ A \emph{unique game} $G$ consists of a finite directed graph $(V,E)$ whose edges
 \[
 \val_\lambda(G)=\Prob_{e=(v,w)\sim p}\bigl[\pi_e(\lambda(v))=\lambda(w)\bigr],\qquad \val(G)=\max_\lambda\val_\lambda(G).
 \]
-Here $\val_\lambda(G)$ is the probability that $\lambda$ satisfies a random edge, and $\val(G)$ is its maximum over labelings.
+Here $\val_\lambda(G)$ is the probability that $\lambda$ satisfies a random edge, and $\val(G)$ is the maximum of this probability over labelings.
 In a \emph{translation game}, $K=\F_2^N$ and $\pi_e(y)=y+b_e$ with $b_e\in K$ (Figure~\ref{fig:ugexample}).
 \end{definition}
 
@@ -41,7 +41,7 @@ For example, Max-Cut is the translation game over $\F_2$ with every $b_e=1$: a l
 For all $\varepsilon,\delta\in(0,1/2)$ there is a finite $K$ such that $\GapUG_K(1-\varepsilon,\delta)$ is NP-hard.
 \end{conjecture}
 
-Two facts show that the gap cannot be larger: the conjecture needs $\varepsilon>0$, and $K$ must grow as $\delta$ shrinks. First, whether $\val(G)=1$ is decidable in polynomial time: discard edges of probability zero, and in each connected component try every label at one vertex, propagate it along a spanning tree, and check every edge. So $\GapUG_K(1,s)$ is not NP-hard unless $\mathrm{P}=\mathrm{NP}$. Second, if $\lambda$ is a uniformly random labeling, then $\Prob_\lambda[\pi_e(\lambda(v))=\lambda(w)]=1/|K|$ for each edge $e$, so $\E_\lambda\val_\lambda(G)=1/|K|$ and some labeling has $\val_\lambda(G)\ge1/|K|$. So soundness $\delta$ requires $|K|\ge1/\delta$.
+Two facts show that the gap cannot be larger: the conjecture needs $\varepsilon>0$, and $K$ must grow as $\delta$ shrinks. First, whether $\val(G)=1$ is decidable in polynomial time: discard edges of probability zero; then, in each connected component, fix a vertex and, for each label at that vertex, propagate the label along a spanning tree and check every edge. So $\GapUG_K(1,s)$ is not NP-hard unless $\mathrm{P}=\mathrm{NP}$. Second, if $\lambda$ is a uniformly random labeling, then $\Prob_\lambda[\pi_e(\lambda(v))=\lambda(w)]=1/|K|$ for each edge $e$, so $\E_\lambda\val_\lambda(G)=1/|K|$ and some labeling has $\val_\lambda(G)\ge1/|K|$. So soundness $\delta$ requires $|K|\ge1/\delta$.
 
 OpenAI proved the conjecture in the following form.
 
@@ -49,9 +49,9 @@ OpenAI proved the conjecture in the following form.
 For all $\varepsilon,\delta\in(0,1/2)$ there are $N\ge1$ and a polynomial-time reduction from 3SAT to unweighted (uniform $p$) translation games over $\F_2^N$ on simple bipartite graphs, with $\val\ge1-\varepsilon$ on satisfiable formulas and $\val\le\delta$ on unsatisfiable ones.
 \end{theorem}
 
-Chapter~\ref{ch:games} assembles its proof. Combined with earlier reductions that assume the conjecture, Theorem~\ref{thm:ugt} makes it NP-hard to approximate Max-Cut within any fixed ratio in $(\alpha_{\mathrm{GW}},1)$, where $\alpha_{\mathrm{GW}}\approx0.878$ is the Goemans--Williamson constant, and Vertex Cover within any fixed factor in $(1,2)$ \cite[Section~8.1]{OAI}.
+Chapter~\ref{ch:games} assembles the proof of Theorem~\ref{thm:ugt}. Combined with earlier reductions that assume the conjecture, Theorem~\ref{thm:ugt} makes it NP-hard to approximate Max-Cut within any fixed ratio in $(\alpha_{\mathrm{GW}},1)$, where $\alpha_{\mathrm{GW}}\approx0.878$ is the Goemans--Williamson constant, and Vertex Cover within any fixed factor in $(1,2)$ \cite[Section~8.1]{OAI}.
 
-Before OpenAI's proof, the strongest result of this form had completeness $1/2$ \cite[Theorem~2.20]{Khot19}. It comes from games with a weaker kind of constraint. A \emph{2-to-2 constraint} on $K\times K$ is a relation $\mathcal R=\bigcup_{j=1}^{|K|/2}B_j\times B'_j$, where $B_1,\dots,B_{|K|/2}$ and $B'_1,\dots,B'_{|K|/2}$ are two partitions of $K$ into sets of size $2$. If $y\in B_j$, then $(y,y')\in\mathcal R$ exactly for the two elements $y'$ of $B'_j$. Likewise, each $y'\in B'_j$ is related exactly to the two elements of $B_j$. Hence the name (Figure~\ref{fig:twotwodef}). A \emph{2-to-2 game} is defined like a unique game (Definition~\ref{def:ug}) with 2-to-2 constraints in place of permutations.
+Before OpenAI's proof, the strongest result of the form of Theorem~\ref{thm:ugt} had completeness $1/2$ \cite[Theorem~2.20]{Khot19} and came from games with a weaker kind of constraint. A \emph{2-to-2 constraint} on $K\times K$ is a relation $\mathcal R=\bigcup_{j=1}^{|K|/2}B_j\times B'_j$, where $B_1,\dots,B_{|K|/2}$ and $B'_1,\dots,B'_{|K|/2}$ are two partitions of $K$ into sets of size $2$. If $y\in B_j$, then $(y,y')\in\mathcal R$ exactly for the two elements $y'$ of $B'_j$. Likewise, each $y'\in B'_j$ is related exactly to the two elements of $B_j$. Hence the name (Figure~\ref{fig:twotwodef}). A \emph{2-to-2 game} is defined like a unique game (Definition~\ref{def:ug}) with 2-to-2 constraints in place of permutations.
 
 \begin{figure}[ht]
 \centering
@@ -95,7 +95,7 @@ A 2-to-2 constraint $\mathcal R=\bigcup_jB_j\times B'_j$ is $\mathrm{graph}(\sig
 \end{lemma}
 
 \begin{proof}
-Write each pair of blocks as $B_j=\{y_0,y_1\}$ and $B'_j=\{y'_0,y'_1\}$, with indices in $\F_2$, and define $\sigma_c(y_i)=y'_{i+c}$ for $c\in\F_2$. Since $\{B_j\}$ and $\{B'_j\}$ partition $K$, $\sigma_0$ and $\sigma_1$ are permutations of $K$. For $y\in B_j$, the two elements of $B'_j$ are $\sigma_0(y)\ne\sigma_1(y)$. So if $(y,y')\in\mathcal R$, then $y'$ equals exactly one of them, and if $(y,y')\notin\mathcal R$, it equals neither. Hence, given $e$, a labeling that satisfies $e$ satisfies the chosen permutation with probability exactly $1/2$, and a labeling that fails $e$ satisfies neither permutation. So $\val_\lambda(G')=\val_\lambda(G)/2$.
+Write each pair of blocks as $B_j=\{y_0,y_1\}$ and $B'_j=\{y'_0,y'_1\}$, with indices in $\F_2$, and define $\sigma_c(y_i)=y'_{i+c}$ for $c\in\F_2$. Since $\{B_j\}$ and $\{B'_j\}$ partition $K$, $\sigma_0$ and $\sigma_1$ are permutations of $K$. For $y\in B_j$, the two elements of $B'_j$ are $\sigma_0(y)\ne\sigma_1(y)$. So $y'$ equals exactly one of them if $(y,y')\in\mathcal R$, and neither if $(y,y')\notin\mathcal R$. Hence, given $e$, a labeling that satisfies $e$ satisfies the chosen permutation with probability exactly $1/2$, and a labeling that fails $e$ satisfies neither permutation. So $\val_\lambda(G')=\val_\lambda(G)/2$.
 \end{proof}
 
 So splitting the constraints of the games in Theorem~\ref{thm:2to2} gives unique games with completeness $(1-\varepsilon)/2$.
@@ -108,10 +108,10 @@ For all $\varepsilon\in(0,1)$ and $\delta\in(0,(1-\varepsilon)/2)$ there is a fi
 Apply Theorem~\ref{thm:2to2} with $\varepsilon_0=\min\{\varepsilon,2\delta,1/4\}$ in place of $\varepsilon$, and split every constraint as in Lemma~\ref{lem:split}. Splitting halves every value. So instances with $\val\ge1-\varepsilon_0$ become unique games with $\val\ge(1-\varepsilon_0)/2\ge(1-\varepsilon)/2$, and instances with $\val\le\varepsilon_0$ become unique games with $\val\le\varepsilon_0/2\le\delta$.
 \end{proof}
 
-How are the two theorems related? Corollary~\ref{cor:half} stops at completeness $(1-\varepsilon)/2$ because splitting halves every value (Lemma~\ref{lem:split}). Part~I proves Theorem~\ref{thm:2to2} with the construction that OpenAI uses for Theorem~\ref{thm:ugt}, but with 2-to-2 constraints where OpenAI's construction has permutations. Part~II replaces them by permutations. This changes one step of the soundness proof, and the new step yields soundness only $0.99$, which Chapter~\ref{ch:games} shows is enough.
+How is Theorem~\ref{thm:ugt} related to Theorem~\ref{thm:2to2}? Corollary~\ref{cor:half} stops at completeness $(1-\varepsilon)/2$ because splitting halves every value (Lemma~\ref{lem:split}). Part~I proves Theorem~\ref{thm:2to2} with the construction that OpenAI uses for Theorem~\ref{thm:ugt}, but with 2-to-2 constraints where OpenAI's construction has permutations. Part~II replaces the 2-to-2 constraints by permutations. It obtains them not by splitting but by enlarging the space of tables and changing the encoding and the law of the test vector, and this change affects one step of the soundness proof. The new step yields soundness only $0.99$, which Chapter~\ref{ch:games} shows is enough.
 
 \chapternotes
-Unique games had been studied in the context of parallel repetition before Khot posed the problem of approximating their value \cite[Section~2.4]{Khot10}. Khot's survey \cite{Khot10} is the source of the definitions used here and describes the consequences of the conjecture known in 2010. The proof of Theorem~\ref{thm:2to2} is spread over four papers of Khot, Minzer, and Safra and of Dinur, Khot, Kindler, Minzer, and Safra \cite{KMS17,DKKMS,DKKMS21,KMS23}. Khot's exposition \cite{Khot19} lists them in its abstract and gives an overview of the whole proof.
+Unique games had been studied in the context of parallel repetition before Khot posed the problem of approximating their value \cite[Section~2.4]{Khot10}. Khot's survey \cite{Khot10} is the source of the definitions used here and describes the consequences of the conjecture known in 2010. The proof of Theorem~\ref{thm:2to2} is spread over four papers of Khot, Minzer, and Safra and of Dinur, Khot, Kindler, Minzer, and Safra \cite{KMS17,DKKMS,DKKMS21,KMS23}. Khot's exposition \cite{Khot19} lists the four papers in its abstract and gives an overview of the whole proof.
 
 \chapterquestions
 \begin{question}\label{q:oddcycle}

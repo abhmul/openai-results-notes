@@ -10,10 +10,10 @@ Part~II proves Theorem~\ref{thm:ugt} by changing the proof of Theorem~\ref{thm:2
   nbox/.style={box,draw=newc,text=newc},
   arr/.style={-{Stealth[length=2mm]}}]
 \node[nbox] (gadget) at (0,0) {tables with values in a space larger than $K$, a nonlinear encoding, and a new law of the test vector $a$ (Lemma~\ref{lem:latent})};
-\node[nbox] (comp) at (-3.3,-2.3) {completeness: encodings fail the new test with probability as small as desired (Chapter~\ref{ch:openai})};
+\node[nbox] (comp) at (-3.3,-2.3) {completeness $1-k\xi-p_*/2$, for any $p_*>0$ (Proposition~\ref{prop:latentgap})};
 \node[nbox] (step1) at (3.3,-2.3) {new Step~1: acceptance at least $0.99$ in the new test implies acceptance bounded below in the equality test (Chapter~\ref{ch:openai})};
 \node[box] (steps) at (3.3,-5.0) {Steps~2--5 of Chapter~\ref{ch:twotwo} for the larger tables (Theorems~\ref{thm:inverse} and~\ref{thm:rep}): soundness $0.99$ (Proposition~\ref{prop:latentgap})};
-\node[nbox] (gap) at (0,-7.4) {loops and weights removed \cite[Lemma~7.1]{OAI}, then repetition of the game (Proposition~\ref{prop:fixedgap})};
+\node[nbox] (gap) at (0,-7.4) {rounding and four-edge subdivision to a simple bipartite game \cite[Lemma~7.1]{OAI}, then repetition (Proposition~\ref{prop:fixedgap})};
 \node[box] (ugt) at (0,-9.1) {Theorem~\ref{thm:ugt}};
 \draw[arr] (gadget) -- (comp);
 \draw[arr] (gadget) -- (step1);
@@ -22,5 +22,5 @@ Part~II proves Theorem~\ref{thm:ugt} by changing the proof of Theorem~\ref{thm:2
 \draw[arr] (steps) |- (gap);
 \draw[arr] (gap) -- (ugt);
 \end{tikzpicture}
-\caption{The proof of Theorem~\ref{thm:ugt}, built on the construction of Chapters~\ref{ch:outer} and~\ref{ch:inner}. Arrows point from a result to the results that use it. Blue boxes are new in Part~II. The black box is Part~I's Steps~2--5 carried over to the larger tables, which Chapter~\ref{ch:openai} sketches with references to \cite[Lemmas~5.5--5.7 and~6.2]{OAI}.}\label{fig:dependency}
+\caption{The proof of Theorem~\ref{thm:ugt}, built on the construction of Chapters~\ref{ch:outer} and~\ref{ch:inner}. Arrows point from a result to the results that use it. Blue boxes are new in Part~II. The Steps~2--5 box is Part~I's Steps~2--5, which Chapter~\ref{ch:openai} carries over to the larger tables in a sketch with references to \cite[Lemmas~5.5--5.7 and~6.2]{OAI}.}\label{fig:dependency}
 \end{figure}
